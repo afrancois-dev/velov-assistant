@@ -17,12 +17,12 @@ def _load() -> list[dict]:
 
 
 def _hit_ids(item: dict, mode: str, top_k: int) -> set:
-    return {r["id"] for r in retriever.retrieve(item["query"], mode=mode, top_k=top_k, rerank=False)}
+    return {r["id"] for r in retriever.retrieve(item["question"], mode=mode, top_k=top_k, rerank=False)}
 
 
 def hit_rate(mode: str, top_k: int = 5) -> float:
     items = _load()
-    return sum(any(gt in _hit_ids(i, mode, top_k) for gt in i["relevant_ids"]) for i in items) / len(items)
+    return sum(i["document"] in _hit_ids(i, mode, top_k) for i in items) / len(items)
 
 
 def mrr(mode: str, top_k: int = 5) -> float:
@@ -31,8 +31,8 @@ def mrr(mode: str, top_k: int = 5) -> float:
         next(
             (
                 1 / r
-                for r, h in enumerate(retriever.retrieve(i["query"], mode=mode, top_k=top_k, rerank=False), 1)
-                if h["id"] in i["relevant_ids"]
+                for r, h in enumerate(retriever.retrieve(i["question"], mode=mode, top_k=top_k, rerank=False), 1)
+                if h["id"] == i["document"]
             ),
             0.0,
         )

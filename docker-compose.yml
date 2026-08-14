@@ -12,30 +12,12 @@ services:
       timeout: 5s
       retries: 10
 
-  postgres:
-    image: postgres:16-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-velov}
-      POSTGRES_USER: ${POSTGRES_USER:-velov}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-velov}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_storage:/var/lib/postgresql/data
-      - ./monitoring/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-velov}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-
   ingestion:
     build:
       context: .
       dockerfile: Dockerfile
     command: >
-      sh -c "python ingestion/faq_pipeline.py &&
-             python ingestion/stations_pipeline.py"
+      sh -c "python ingestion/faq_pipeline.py"
     environment:
       QDRANT_URL: http://qdrant:6333
       DESTINATION__QDRANT__QD_LOCATION: http://qdrant:6333
@@ -43,8 +25,6 @@ services:
       GRANDLYON_STATIONS_URL: ${GRANDLYON_STATIONS_URL:-https://data.grandlyon.com/fr/datapusher/ws/rdata/jcd_jcdecaux.jcdvelov/all.json}
     depends_on:
       qdrant:
-        condition: service_healthy
-      postgres:
         condition: service_healthy
     volumes:
       - ./data:/app/data
@@ -65,35 +45,11 @@ services:
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://opencode.ai/zen/v1/}
       LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
       RERANK_MODEL: ${RERANK_MODEL:-cross-encoder/ms-marco-MiniLM-L-6-v2}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
-      POSTGRES_DB: ${POSTGRES_DB:-velov}
-      POSTGRES_USER: ${POSTGRES_USER:-velov}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-velov}
       LOGFIRE_TOKEN: ${LOGFIRE_TOKEN:-}
       GRANDLYON_STATIONS_URL: ${GRANDLYON_STATIONS_URL:-https://data.grandlyon.com/fr/datapusher/ws/rdata/jcd_jcdecaux.jcdvelov/all.json}
     depends_on:
       qdrant:
         condition: service_healthy
-      postgres:
-        condition: service_healthy
-
-  grafana:
-    image: grafana/grafana:11.3.0
-    ports:
-      - "3000:3000"
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-    volumes:
-      - grafana_storage:/var/lib/grafana
-      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
-    depends_on:
-      postgres:
-        condition: service_healthy
 
 volumes:
   qdrant_storage:
-  postgres_storage:
-  grafana_storage:

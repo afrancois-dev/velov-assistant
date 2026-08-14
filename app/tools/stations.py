@@ -31,16 +31,16 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
         "type": "function",
         "function": {
             "name": "find_nearest_bikes",
-            "description": (
-                "Find the nearest Velo'v stations to a location with the number of available bikes and free stands at each."
-            ),
+            "description": ("Find the nearest Velo'v stations with available bikes to a place, landmark or address in Lyon."),
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "latitude": {"type": "number", "description": "Latitude in degrees."},
-                    "longitude": {"type": "number", "description": "Longitude in degrees."},
+                    "place": {
+                        "type": "string",
+                        "description": "A place, landmark or address in Lyon (e.g. 'Part-Dieu station').",
+                    }
                 },
-                "required": ["latitude", "longitude"],
+                "required": ["place"],
             },
         },
     },
@@ -57,9 +57,11 @@ def get_station_availability(station_name_or_location: str) -> dict[str, Any]:
     return {"query": station_name_or_location, "stations": matches[:10]}
 
 
-def find_nearest_bikes(latitude: float, longitude: float) -> dict[str, Any]:
-    """Return the nearest stations with availability."""
-    return {"latitude": latitude, "longitude": longitude, "stations": grandlyon.nearest_stations(latitude, longitude)}
+def find_nearest_bikes(place: str) -> dict[str, Any]:
+    """Geocode a place and return the nearest stations with availability."""
+    if not (coords := grandlyon.geocode(place)):
+        return {"place": place, "error": f"Could not locate '{place}'"}
+    return {"place": place, "latitude": coords[0], "longitude": coords[1], "stations": grandlyon.nearest_stations(*coords)}
 
 
 TOOL_IMPL = {

@@ -29,18 +29,17 @@ FAQ page ──scrape──▶ dlt ──embed──▶ Qdrant ──▶ hybrid 
                                                                   ├─▶ LLM (OpenCode) ─▶ answer
 Grand Lyon API ──▶ function calling (get_station_availability, find_nearest_bikes) ─┘
                                       │
-                    Logfire traces + Postgres metrics ──▶ Grafana dashboard
+                    Logfire traces + metrics (charts in the Logfire UI)
 ```
 
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen)
+cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LOGFIRE_TOKEN
 docker compose up --build
 ```
 
-Services: Qdrant (`:6333`), PostgreSQL (`:5432`), app (`:8000`), Grafana (`:3000`,
-admin/admin).
+Services: Qdrant (`:6333`), app (`:8000`).
 
 Then try:
 
@@ -52,14 +51,15 @@ curl -s localhost:8000/chat -H 'content-type: application/json' \
 ## Local development
 
 ```bash
-uv sync                                           # install deps
-playwright install chromium                       # once, for the FAQ scraper
-uv run python ingestion/faq_pipeline.py           # dlt: scrape FAQ -> Qdrant
-uv run python ingestion/stations_pipeline.py      # dlt: stations -> DuckDB
+uv sync                                       # install deps
+playwright install chromium                   # once, for the FAQ scraper
+uv run ingest-faq                             # dlt: scrape FAQ -> Qdrant
+uv run ingest-stations                        # dlt: stations -> DuckDB (optional snapshot)
 uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-uv run python scripts/sample_query.py
+uv run demo                                   # sample queries against the app
 ```
 
+Other commands: `uv run ingest`, `uv run eval`, `uv run eval-retrieval`, `uv run eval-llm`.
 Lint/format: `uv run ruff check .` and `uv run ruff format .`.
 
 ## Ingestion (dlt)
@@ -75,24 +75,24 @@ Qdrant destination config lives in `.dlt/config.toml`; override with
 ## Retrieval & RAG
 
 - **Query rewriting** (`app/rag/llm.py`) — LLM expands the query.
-- **Hybrid search** (`app/rag/retriever.py`) — dense (FastEmbed) + sparse (Qdrant
-  full-text/BM25) fused with RRF; three modes evaluable separately.
+- **Hybrid search** (`app/rag/retriever.py`) — dense (FastEmbed, Qdrant) + sparse
+  (BM25) fused with RRF; three modes evaluable separately.
 - **Re-ranking** — cross-encoder re-scores the fused top-K.
 
 ## Evaluation
 
 ```bash
-uv run python evaluation/retrieval_eval.py   # hit rate / MRR (dense vs sparse vs hybrid)
-uv run python evaluation/llm_eval.py         # LLM-as-judge
+uv run eval-retrieval   # hit rate / MRR (dense vs sparse vs hybrid)
+uv run eval-llm         # LLM-as-judge
 ```
 
-## Monitoring
+## Monitoring (Logfire)
 
-- **Logfire** traces the chat handler, retriever and tool calls.
-- A metrics recorder writes requests + feedback to PostgreSQL.
-- **Grafana** dashboard (provisioned automatically) with 5 panels: queries over
-  time, latency breakdown, feedback distribution, vector-vs-tool ratio, error rate
-  and token consumption.
+Tracing and metrics are sent to **Pydantic Logfire** (set `LOGFIRE_TOKEN`). The app
+emits spans for the chat handler, retriever, reranker and tool calls, plus metrics:
+requests, retrieval/LLM/total latency, token usage, error count and feedback (+1/-1).
+Charts for the 5 required panels (queries over time, latency breakdown, feedback
+distribution, vector-vs-tool ratio, error rate + tokens) are built in the Logfire UI.
 
 ## Reproducibility
 

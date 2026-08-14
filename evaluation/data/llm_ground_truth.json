@@ -1,7 +1,0 @@
-[
-  {
-    "question": "What is the price of a Velo'v day ticket?",
-    "reference": "A day ticket costs 1.5 EUR and gives 24h of access.",
-    "candidate": "The day ticket costs 1.5 EUR for 24 hours."
-  }
-]

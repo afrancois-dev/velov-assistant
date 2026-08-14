@@ -18,6 +18,7 @@ from dlt.destinations.adapters import qdrant_adapter
 FAQ_URL = "https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ"
 FALLBACK_FILE = Path(__file__).resolve().parents[1] / "data" / "faq" / "faq.json"
 
+
 def _scrape_live() -> list[dict]:
     from playwright.sync_api import sync_playwright
 
@@ -41,8 +42,12 @@ def _scrape_live() -> list[dict]:
                 line.locator('[data-test-id="faq-question"]').click()
                 page.wait_for_timeout(300)
                 entries.append(
-                    {"id": f"faq-{re.sub(r"[^a-z0-9]+", "-", question.lower()).strip('-')}", "topic": topic, "question": question,
-                     "answer": line.locator("div[body]").inner_text().strip()}
+                    {
+                        "id": f"faq-{re.sub(r'[^a-z0-9]+', '-', question.lower()).strip('-')}",
+                        "topic": topic,
+                        "question": question,
+                        "answer": line.locator("div[body]").inner_text().strip(),
+                    }
                 )
     return entries
 

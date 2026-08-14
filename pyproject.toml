@@ -29,17 +29,14 @@ dependencies = [
     "pydantic>=2.7.0,<3",
     "pydantic-settings>=2.3.0,<3",
     "logfire>=1.0.0,<3",
-    "psycopg[binary]>=3.1.0,<4",
-    "sqlalchemy>=2.0.0,<3",
     "tenacity>=8.0.0,<10",
     "importlib-metadata>=8.0.0",
 ]
 
 [project.scripts]
-ingest = "ingestion:run_all"
-ingest-faq = "ingestion.faq_pipeline:run"
-ingest-stations = "ingestion.stations_pipeline:run"
+ingest = "ingestion.faq_pipeline:run"
 eval = "evaluation:run_all"
+eval-gen = "evaluation.data_gen:main"
 eval-retrieval = "evaluation.retrieval_eval:main"
 eval-llm = "evaluation.llm_eval:main"
 demo = "scripts.sample_query:main"

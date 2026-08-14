@@ -39,9 +39,14 @@ def _embed(query: str) -> list[float]:
     return next(_dense_model().embed([query])).tolist()
 
 
+def _doc_id(point: ScoredPoint) -> str:
+    payload = point.payload or {}
+    return payload.get("id") or point.id
+
+
 def _to_hit(point: ScoredPoint) -> dict[str, Any]:
     payload = point.payload or {}
-    return {"id": point.id, "score": point.score, **{f: payload.get(f) for f in _PAYLOAD_FIELDS}}
+    return {"id": _doc_id(point), "score": point.score, **{f: payload.get(f) for f in _PAYLOAD_FIELDS}}
 
 
 def search_dense(query: str, limit: int = 20) -> list[dict[str, Any]]:
@@ -65,7 +70,7 @@ def _corpus() -> list[dict]:
         points, offset = client.scroll(
             settings.qdrant_collection, limit=256, offset=offset, with_payload=True, with_vectors=False
         )
-        docs.extend({"id": p.id, **p.payload} for p in points)
+        docs.extend({"id": _doc_id(p), **p.payload} for p in points)
         if offset is None:
             return docs
 

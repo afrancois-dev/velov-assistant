@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import time
-import uuid
 
 import logfire
 from fastapi import FastAPI
@@ -21,11 +20,6 @@ configure_logfire()
 
 app = FastAPI(title="Velo'v Assistant")
 instrument(app)
-
-
-@app.on_event("startup")
-def _startup() -> None:
-    metrics.init_db()
 
 
 _RAG_SYSTEM = (
@@ -49,7 +43,7 @@ def _context_block(sources: list[Source]) -> str:
 
 
 @logfire.instrument("chat", extract_args=True)
-def _run_chat(conversation_id: str, message: str) -> tuple[str, str, list[Source], list[str], dict]:
+def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     started = time.perf_counter()
 
     t0 = time.perf_counter()
@@ -98,19 +92,18 @@ def _run_chat(conversation_id: str, message: str) -> tuple[str, str, list[Source
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest) -> ChatResponse:
-    conversation_id = uuid.uuid4().hex
     try:
-        answer, intent, sources, tools_used, meta = _run_chat(conversation_id, req.message)
-    except Exception as exc:
-        metrics.record_request(conversation_id=conversation_id, intent="error", error=str(exc))
+        answer, intent, sources, tools_used, meta = _run_chat(req.message)
+    except Exception:
+        metrics.record_error()
         raise
-    metrics.record_request(conversation_id=conversation_id, intent=intent, retrieval_mode="hybrid", **meta)
+    metrics.record_request(intent=intent, retrieval_mode="hybrid", **meta)
     return ChatResponse(answer=answer, intent=intent, sources=sources, tools_used=tools_used)
 
 
 @app.post("/feedback")
 def feedback(req: FeedbackRequest) -> dict:
-    metrics.record_feedback(conversation_id=req.conversation_id, rating=req.rating, comment=req.comment)
+    metrics.record_feedback(rating=req.rating, conversation_id=req.conversation_id, comment=req.comment)
     return {"status": "ok"}
 
 

@@ -7,8 +7,6 @@ from pydantic import BaseModel
 
 class ChatRequest(BaseModel):
     message: str
-    latitude: float | None = None
-    longitude: float | None = None
 
 
 class Source(BaseModel):

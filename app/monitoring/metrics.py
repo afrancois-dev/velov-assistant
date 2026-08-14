@@ -1,68 +1,43 @@
-"""Metrics recorder — persists request/feedback events to Postgres for Grafana."""
+"""Observability metrics via Pydantic Logfire (charts live in the Logfire UI)."""
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+import logfire
 
-from sqlalchemy import Column, DateTime, Float, Integer, String, Text, create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
-
-from app.config import settings
-
-_engine = create_engine(settings.postgres_dsn, pool_pre_ping=True)
-_Session = sessionmaker(bind=_engine)
-
-
-class Base(DeclarativeBase):
-    pass
+_requests = logfire.metric_counter("velov.requests")
+_latency_retrieval = logfire.metric_histogram("velov.latency.retrieval_ms", unit="ms")
+_latency_llm = logfire.metric_histogram("velov.latency.llm_ms", unit="ms")
+_latency_total = logfire.metric_histogram("velov.latency.total_ms", unit="ms")
+_tokens = logfire.metric_counter("velov.tokens")
+_errors = logfire.metric_counter("velov.errors")
+_feedback = logfire.metric_counter("velov.feedback")
 
 
-class RequestEvent(Base):
-    __tablename__ = "requests"
-
-    id = Column(Integer, primary_key=True)
-    ts = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    conversation_id = Column(String)
-    intent = Column(String)
-    retrieval_mode = Column(String)
-    latency_retrieval_ms = Column(Float, default=0.0)
-    latency_llm_ms = Column(Float, default=0.0)
-    latency_total_ms = Column(Float, default=0.0)
-    prompt_tokens = Column(Integer, default=0)
-    completion_tokens = Column(Integer, default=0)
-    total_tokens = Column(Integer, default=0)
-    error = Column(String, nullable=True)
-
-
-class FeedbackEvent(Base):
-    __tablename__ = "feedback"
-
-    id = Column(Integer, primary_key=True)
-    ts = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    conversation_id = Column(String)
-    rating = Column(Integer)
-    comment = Column(Text, nullable=True)
+def record_request(
+    intent: str,
+    retrieval_mode: str,
+    *,
+    latency_retrieval_ms: float,
+    latency_llm_ms: float,
+    latency_total_ms: float,
+    prompt_tokens: int,
+    completion_tokens: int,
+    total_tokens: int,
+) -> None:
+    attrs = {"intent": intent, "retrieval_mode": retrieval_mode}
+    _requests.add(1, attributes=attrs)
+    _latency_retrieval.record(latency_retrieval_ms, attributes=attrs)
+    _latency_llm.record(latency_llm_ms, attributes=attrs)
+    _latency_total.record(latency_total_ms, attributes=attrs)
+    _tokens.add(total_tokens, attributes={**attrs, "kind": "total"})
+    _tokens.add(prompt_tokens, attributes={**attrs, "kind": "prompt"})
+    _tokens.add(completion_tokens, attributes={**attrs, "kind": "completion"})
 
 
-def _write(event) -> None:
-    try:
-        with _Session() as s:
-            s.add(event)
-            s.commit()
-    except Exception:
-        pass
+def record_error() -> None:
+    _errors.add(1)
 
 
-def init_db() -> None:
-    try:
-        Base.metadata.create_all(_engine)
-    except Exception:
-        pass
-
-
-def record_request(**kwargs) -> None:
-    _write(RequestEvent(**kwargs))
-
-
-def record_feedback(**kwargs) -> None:
-    _write(FeedbackEvent(**kwargs))
+def record_feedback(rating: int, conversation_id: str | None = None, comment: str | None = None) -> None:
+    _feedback.add(1, attributes={"rating": "up" if rating > 0 else "down"})
+    logfire.info("feedback", rating=rating, conversation_id=conversation_id, comment=comment)
