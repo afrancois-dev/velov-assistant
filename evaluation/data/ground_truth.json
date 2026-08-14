@@ -1,0 +1,14 @@
+[
+  {
+    "query": "Is it possible to use Velo'v without an account?",
+    "relevant_ids": ["faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"]
+  },
+  {
+    "query": "How do I access the service with my smartphone?",
+    "relevant_ids": ["faq-how-to-access-to-the-service-with-a-smartphone"]
+  },
+  {
+    "query": "What should I do if my card is stolen?",
+    "relevant_ids": ["faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"]
+  }
+]

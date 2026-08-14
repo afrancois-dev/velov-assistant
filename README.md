@@ -1,43 +1,99 @@
 # velov-assistant
-An AI assistant for Lyon's self-service bike network with:
-- real-time station availability and nearby bike location (function call)
-- service FAQ answers powered by RAG
 
-# Project
+An AI assistant for Lyon's self-service bike network (Vélo'v) with:
+
+- **RAG** — answers about policies, pricing and rules from the official FAQ.
+- **Function calling** — real-time station availability and nearest-bike lookups.
 
 ## Problem description
-Tourist or new comers to the city of Lyon needs information about how the velov works. Those information are provided on the FAQ of the velov website;
- however, it can be tedious to consult the website. Moreover, the assistant provide a real time availabily checker for bike station.
 
-- An user could ask question such as which is the nearest station available nearby in Part-Dieu? 
-- Can I book several bikes? 
+Tourists and newcomers in Lyon need quick information about how Vélo'v works. That
+information lives in the FAQ on the Vélo'v website, which is tedious to browse. The
+assistant answers FAQ questions and checks real-time bike availability, e.g.:
 
+- "Which is the nearest station with bikes available near Part-Dieu?"
+- "Can I book several bikes with one card?"
 
-## Retrieval flow (knowledge base + llm)
+## Project layout
 
-## Retrieval evaluation (multiple retrieval approaches are evaluated and the best one is used) e.g text search + vector search
+The repo root is the single project home — the dlthub workspace and the Velo'v
+application live side by side. Run all commands from the repo root.
 
-## LLM evaluation (multiple approaches evaluated and the best one is used)
+## Architecture
 
-## Interface (api or visual interface such as grafana)
+See [`docs/architecture.md`](docs/architecture.md) for the full mermaid diagram,
+directory structure and module-by-module plan.
 
+```
+FAQ page ──scrape──▶ dlt ──embed──▶ Qdrant ──▶ hybrid retriever ─┐
+                                                                  ├─▶ LLM (OpenCode) ─▶ answer
+Grand Lyon API ──▶ function calling (get_station_availability, find_nearest_bikes) ─┘
+                                      │
+                    Logfire traces + Postgres metrics ──▶ Grafana dashboard
+```
 
-## Ingestion pipeline (automated ingestion i.e airflow, kestra, dlt, bruin)
+## Quick start (Docker)
 
-## Monitoring (i.e User feedback is collected and there's a dashboard with at least 5 charts)
+```bash
+cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen)
+docker compose up --build
+```
 
-## Containerization (everything in docker-compose)
+Services: Qdrant (`:6333`), PostgreSQL (`:5432`), app (`:8000`), Grafana (`:3000`,
+admin/admin).
 
+Then try:
+
+```bash
+curl -s localhost:8000/chat -H 'content-type: application/json' \
+  -d '{"message":"Is there a bike near Part-Dieu right now?"}'
+```
+
+## Local development
+
+```bash
+uv sync                                           # install deps
+playwright install chromium                       # once, for the FAQ scraper
+uv run python ingestion/faq_pipeline.py           # dlt: scrape FAQ -> Qdrant
+uv run python ingestion/stations_pipeline.py      # dlt: stations -> DuckDB
+uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+uv run python scripts/sample_query.py
+```
+
+Lint/format: `uv run ruff check .` and `uv run ruff format .`.
+
+## Ingestion (dlt)
+
+- `ingestion/faq_pipeline.py` — scrapes the FAQ (Playwright), chunks it and loads it
+  into Qdrant with dense embeddings via `qdrant_adapter(resource, embed="content")`
+  (FastEmbed model). Falls back to `data/faq/faq.json` if the live scrape fails.
+- `ingestion/stations_pipeline.py` — snapshots real-time stations into DuckDB.
+
+Qdrant destination config lives in `.dlt/config.toml`; override with
+`DESTINATION__QDRANT__QD_LOCATION` / `DESTINATION__QDRANT__MODEL`.
+
+## Retrieval & RAG
+
+- **Query rewriting** (`app/rag/llm.py`) — LLM expands the query.
+- **Hybrid search** (`app/rag/retriever.py`) — dense (FastEmbed) + sparse (Qdrant
+  full-text/BM25) fused with RRF; three modes evaluable separately.
+- **Re-ranking** — cross-encoder re-scores the fused top-K.
+
+## Evaluation
+
+```bash
+uv run python evaluation/retrieval_eval.py   # hit rate / MRR (dense vs sparse vs hybrid)
+uv run python evaluation/llm_eval.py         # LLM-as-judge
+```
+
+## Monitoring
+
+- **Logfire** traces the chat handler, retriever and tool calls.
+- A metrics recorder writes requests + feedback to PostgreSQL.
+- **Grafana** dashboard (provisioned automatically) with 5 panels: queries over
+  time, latency breakdown, feedback distribution, vector-vs-tool ratio, error rate
+  and token consumption.
 
 ## Reproducibility
-- Instructions are clear, the dataset is accessible, it's easy to run the code, and it works. The versions for all dependencies are specified.
 
-
-## Bonus
-- Best practices
- - Hybrid search: combining both text and vector search (at least evaluating it) (1 point)
- - Document re-ranking (1 point)
- - User query rewriting (1 point)
-- Bonus points (not covered in the course)
- - Deployment to the cloud (2 points)
- - Up to 3 extra bonus points if you want to award for something extra (write in feedback for what)
+All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).

@@ -1,0 +1,87 @@
+[project]
+name = "dlthub-workspace"
+version = "0.1.0"
+description = "A dlthub workspace + Velo'v assistant (RAG + function calling)"
+requires-python = ">=3.13"
+dependencies = [
+    # dlthub workspace tooling
+    "dlt[hub]>=1.27.2,<2",
+    "dlthub>=0.27.0,<1",
+    "duckdb>=0.9",
+    "ibis-framework>=12.0.0 ; python_version >= '3.10'",
+    "pyarrow>=16.0.0",
+    "fastmcp>=3.0.0 ; python_version >= '3.10'",
+    "mowidgets>=0.2.1 ; python_version >= '3.11'",
+    "pathspec>=0.11.2",
+    "pydbml>=1.2.0",
+    "croniter>=6.0.0",
+    # velov-assistant app
+    "fastapi>=0.115.0,<1",
+    "uvicorn[standard]>=0.30.0,<1",
+    "qdrant-client>=1.11.0,<1.19",
+    "fastembed>=0.4.0,<1",
+    "openai>=1.40.0,<2",
+    "sentence-transformers>=3.0.0,<5",
+    "httpx>=0.27.0,<1",
+    "beautifulsoup4>=4.12.0,<5",
+    "lxml>=5.0.0,<6",
+    "playwright>=1.45.0,<2",
+    "pydantic>=2.7.0,<3",
+    "pydantic-settings>=2.3.0,<3",
+    "logfire>=1.0.0,<3",
+    "psycopg[binary]>=3.1.0,<4",
+    "sqlalchemy>=2.0.0,<3",
+    "tenacity>=8.0.0,<10",
+    "importlib-metadata>=8.0.0",
+]
+
+[project.scripts]
+ingest = "ingestion:run_all"
+ingest-faq = "ingestion.faq_pipeline:run"
+ingest-stations = "ingestion.stations_pipeline:run"
+eval = "evaluation:run_all"
+eval-retrieval = "evaluation.retrieval_eval:main"
+eval-llm = "evaluation.llm_eval:main"
+demo = "scripts.sample_query:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "ingestion", "evaluation", "scripts"]
+
+[dependency-groups]
+
+ci = [
+    "ruff>=0.15.8,<0.16.0", # formating and linting
+    "yamllint>=1.38.0,<1.39.0", # yaml linting
+    "ty>=0.0.26,<0.0.27", # type checking
+    "dlthub-client>=0.27.7,<1", # dlthub client
+    ]
+
+dev = [
+    {include-group = "ci"},
+    "prek",
+    "marimo>=0.14.5",
+    "pytest>=8.0.0,<9",
+    "pytest-asyncio>=0.23.0,<1",
+]
+
+[tool.uv]
+default-groups = ["ci"]
+
+[tool.ruff]
+line-length = 130
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
