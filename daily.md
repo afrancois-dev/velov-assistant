@@ -12,3 +12,7 @@ uv run ruff check --fix
 uv run ty check
 ```
 
+- update ingestion/
+    - remove stations ingestion
+- remove grafana and use pydantic logfire
+- update evaluation/
