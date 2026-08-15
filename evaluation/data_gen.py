@@ -16,18 +16,17 @@ faq_file = Path("data/faq/faq.json")
 ground_truth_file = Path("data/faq/ground_truth.json")
 
 DATA_GEN_INSTRUCTIONS = """
-You emulate a student who's interested in Velo'v, Lyon's bike-sharing service.
-Formulate 5 questions this student might ask based on a FAQ record. The record
+You emulate a customer who's interested in Velo'v, Lyon's bike-sharing service.
+Formulate 5 questions this customer might ask based on a FAQ record. The record
 should contain the answer to the questions, and the questions should be complete and not too short.
 If possible, use as few words as possible from the record.
 
-The output should resemble how people ask questions
-on the internet. Not too formal, not too short, not too long.
+The output should resemble how people ask questions on the internet. Not too formal, not too short, not too long.
 """.strip()
 
 
 class Questions(BaseModel):
-    questions: list[str] = Field(description="5 questions the student might ask")
+    questions: list[str] = Field(description="5 questions the customer might ask")
 
 
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=60))
