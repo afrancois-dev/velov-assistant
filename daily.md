@@ -19,6 +19,7 @@ TODO:
 - utiliser tqdm pour la progression de la génération du ground truth dataset synthétique
 - utiliser un autre llm pour le judge
 - mutualiser ces function_call (get_station_availability + find_nearest_bikes) en un seul
+- ajouter dans la CI/CD les étapes d'évaluation du modèle obligatoirement !
 - CI/CD
 - Ajouter un readme pour les correcteurs
 - Voir si je peux déployer l'app gratuitement cloud side sur une stack 

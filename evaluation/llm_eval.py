@@ -8,18 +8,18 @@ and explains its verdict. See 04-evaluation/lessons/13-llm-as-judge.md.
 from __future__ import annotations
 
 import json
-from functools import lru_cache
 from pathlib import Path
 from typing import Literal, cast
 
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent
+from tqdm import tqdm
 
 from app.main import _run_chat
 from app.rag.llm import get_model
 
-faq_file = Path("data/faq/faq.json")
-ground_truth_file = Path("data/faq/ground_truth.json")
+faq_file = json.loads(Path("data/faq/faq.json").read_text())
+ground_truth_file = json.loads(Path("data/faq/ground_truth.json").read_text())
 
 JUDGE_INSTRUCTIONS = """
 You are an expert evaluator. You will be given:
@@ -63,19 +63,11 @@ _judge_agent = Agent(
 )
 
 
-@lru_cache(maxsize=1)
-def _load() -> list[dict]:
-    return json.loads(ground_truth_file.read_text())
-
-
-@lru_cache(maxsize=1)
-def _faq() -> dict[str, str]:
-    return {d["id"]: d["answer"] for d in json.loads(faq_file.read_text())}
-
-
 def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
-    prompt = JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm)
-    return cast(AnswerEvaluation, _judge_agent.run_sync(prompt).output)
+    return cast(
+        AnswerEvaluation,
+        _judge_agent.run_sync(JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm)).output,
+    )
 
 
 def _generate_answer(question: str) -> str:
@@ -84,16 +76,18 @@ def _generate_answer(question: str) -> str:
 
 
 def _records() -> list[dict]:
-    faq = _faq()
-    return [
-        {"question": item["question"], "answer_orig": faq[item["document"]], "answer_llm": _generate_answer(item["question"])}
-        for item in _load()
-    ]
+    faq = {d["id"]: d["answer"] for d in faq_file}
+    records = []
+    for item in tqdm(ground_truth_file, desc="Generating answers"):
+        records.append(
+            {"question": item["question"], "answer_orig": faq[item["document"]], "answer_llm": _generate_answer(item["question"])}
+        )
+    return records
 
 
 def main() -> None:
     records = _records()
-    results = [judge(**r) for r in records]
+    results = [judge(**r) for r in tqdm(records, desc="Judging")]
     good = sum(r.score == "good" for r in results)
     print(f"good: {good}/{len(records)} = {good / len(records):.2%}")
     for record, result in zip(records, results):

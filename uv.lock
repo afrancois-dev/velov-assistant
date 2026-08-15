@@ -635,6 +635,7 @@ dependencies = [
     { name = "qdrant-client" },
     { name = "sentence-transformers" },
     { name = "tenacity" },
+    { name = "tqdm" },
     { name = "uvicorn", extra = ["standard"] },
 ]
 
@@ -678,6 +679,7 @@ requires-dist = [
     { name = "qdrant-client", specifier = ">=1.11.0,<1.19" },
     { name = "sentence-transformers", specifier = ">=3.0.0,<5" },
     { name = "tenacity", specifier = ">=8.0.0,<10" },
+    { name = "tqdm", specifier = ">=4.66.0,<5" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.30.0,<1" },
 ]
 
