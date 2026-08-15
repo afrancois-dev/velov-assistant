@@ -15,8 +15,8 @@ from pathlib import Path
 import dlt
 from dlt.destinations.adapters import qdrant_adapter
 
-FAQ_URL = "https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ"
-FALLBACK_FILE = Path(__file__).resolve().parents[1] / "data" / "faq" / "faq.json"
+faq_url = "https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ"
+fallback_file = Path("/data/faq/faq.json")
 
 
 def _scrape_live() -> list[dict]:
@@ -25,7 +25,7 @@ def _scrape_live() -> list[dict]:
     entries: list[dict] = []
     with sync_playwright() as p:
         page = p.chromium.launch(headless=True).new_page()
-        page.goto(FAQ_URL, wait_until="networkidle", timeout=60_000)
+        page.goto(faq_url, wait_until="networkidle", timeout=60_000)
         page.wait_for_timeout(1500)
 
         # each topic is a `.container` section with an <h2> header; questions live in
@@ -53,19 +53,19 @@ def _scrape_live() -> list[dict]:
 
 
 def _dump(entries: list[dict]) -> None:
-    FALLBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
-    FALLBACK_FILE.write_text(json.dumps(entries, ensure_ascii=False, indent=2))
+    fallback_file.parent.mkdir(parents=True, exist_ok=True)
+    fallback_file.write_text(json.dumps(entries, ensure_ascii=False, indent=2))
 
 
 def _scrape_faq() -> list[dict]:
     try:
         entries = _scrape_live()
     except Exception:
-        return json.loads(FALLBACK_FILE.read_text())
+        return json.loads(fallback_file.read_text())
     if entries:
         _dump(entries)
         return entries
-    return json.loads(FALLBACK_FILE.read_text())
+    return json.loads(fallback_file.read_text())
 
 
 @dlt.resource(name="faq", primary_key="id", write_disposition="replace")

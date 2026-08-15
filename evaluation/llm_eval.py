@@ -19,8 +19,8 @@ from app.config import settings
 from app.main import _run_chat
 from app.rag.llm import get_client
 
-GROUND_TRUTH = Path(__file__).resolve().parent / "data" / "ground_truth.json"
-FAQ = Path(__file__).resolve().parent.parent / "data" / "faq" / "faq.json"
+faq_file = Path("data/faq/faq.json")
+ground_truth_file = Path("data/faq/ground_truth.json")
 
 JUDGE_INSTRUCTIONS = """
 You are an expert evaluator. You will be given:
@@ -61,12 +61,12 @@ class AnswerEvaluation(BaseModel):
 
 @lru_cache(maxsize=1)
 def _load() -> list[dict]:
-    return json.loads(GROUND_TRUTH.read_text())
+    return json.loads(ground_truth_file.read_text())
 
 
 @lru_cache(maxsize=1)
 def _faq() -> dict[str, str]:
-    return {d["id"]: d["answer"] for d in json.loads(FAQ.read_text())}
+    return {d["id"]: d["answer"] for d in json.loads(faq_file.read_text())}
 
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=8))

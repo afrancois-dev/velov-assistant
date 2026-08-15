@@ -8,12 +8,11 @@ from pathlib import Path
 
 from app.rag import retriever
 
-GROUND_TRUTH = Path(__file__).resolve().parent / "data" / "ground_truth.json"
-
+ground_truth_file = Path("data/faq/ground_truth.json")
 
 @lru_cache(maxsize=1)
 def _load() -> list[dict]:
-    return json.loads(GROUND_TRUTH.read_text())
+    return json.loads(ground_truth_file.read_text())
 
 
 def _hit_ids(item: dict, mode: str, top_k: int) -> set:

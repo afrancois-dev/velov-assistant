@@ -12,9 +12,8 @@ from tenacity import retry, stop_after_attempt, wait_exponential
 from app.config import settings
 from app.rag.llm import get_client
 
-DATA = Path(__file__).resolve().parent / "data"
-FAQ = Path(__file__).resolve().parent.parent / "data" / "faq" / "faq.json"
-GROUND_TRUTH = DATA / "ground_truth.json"
+faq_file = Path("data/faq/faq.json")
+ground_truth_file = Path("data/faq/ground_truth.json")
 
 DATA_GEN_INSTRUCTIONS = """
 You emulate a student who's interested in Velo'v, Lyon's bike-sharing service.
@@ -56,14 +55,14 @@ def generate_ground_truth(doc: dict) -> list[dict]:
 
 
 def main() -> None:
-    faq = json.loads(FAQ.read_text())
+    faq = json.loads(faq_file.read_text())
     records: list[dict] = []
     for i, doc in enumerate(faq, 1):
         records.extend(generate_ground_truth(doc))
         print(f"[{i}/{len(faq)}] {doc['id']}")
         time.sleep(1)
-    GROUND_TRUTH.write_text(json.dumps(records, ensure_ascii=False, indent=2))
-    print(f"wrote {len(records)} records to {GROUND_TRUTH}")
+    ground_truth_file.write_text(json.dumps(records, ensure_ascii=False, indent=2))
+    print(f"wrote {len(records)} records to {ground_truth_file}")
 
 
 if __name__ == "__main__":
