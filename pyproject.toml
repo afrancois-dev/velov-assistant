@@ -20,15 +20,13 @@ dependencies = [
     "uvicorn[standard]>=0.30.0,<1",
     "qdrant-client>=1.11.0,<1.19",
     "fastembed>=0.4.0,<1",
-    "pydantic-ai>=0.8.1,<1",  # 1.x/2.x are breaking major rewrites
-    "opentelemetry-api>=1.28.0,<1.44.0",  # pydantic-ai needs opentelemetry._events, removed in 1.44
     "sentence-transformers>=3.0.0,<5",
     "httpx>=0.27.0,<1",
-    "pydantic>=2.7.0,<3",
-    "pydantic-settings>=2.3.0,<3",
-    "logfire[system-metrics]>=1.0.0,<3",
     "tenacity>=8.0.0,<10",
-    "importlib-metadata>=8.0.0",  # logfire imports importlib_metadata at runtime but doesn't declare it
+    "importlib-metadata>=8.0.0",
+    "pydantic>=2.13.4",
+    "pydantic-ai>=2.31.0",
+    "logfire>=4.40.0",
 ]
 
 [project.scripts]

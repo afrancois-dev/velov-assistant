@@ -3,7 +3,19 @@
     "id": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
     "topic": "Subscriptions",
     "question": "Is it possible to access to the service without a Vélo'v account ?",
-    "answer": "It is not necessary to create a Vélo'v account to access the service.\n\nIt is possible to purchase occasional formulas for 1 trip or for 24 hours at the Vélo'v stations equipped with an electronic payment terminal. (To find out the electronic payment terminals, consult the station map on the website or the official Vélo'v mobile application and apply the filter \"only e-money stations\")\n\n1. Go to a Vélo'v reception and subscription terminal equipped with a payment terminal\n2. Click on \"Buy a plan\" on the home screen\n3. Choose the option of your choice: \"Vélo'v 1 trip\" at 1.80 euros for a single trip or \"Vélo'v 24 hours\" at 4 euros to perform an unlimited number of trips for 24 hours\n4. Indicate the number of formulas desired (up to 5 formulas) and choose a 6-digit secret code\n5. Insert your VISA or MASTERCARD and follow the instructions\n\nThe terminal will issue you as many access tickets as there are purchased subscriptions.\n\nWith the temporaray tickets, you access to all the Vélo'v network and can unlock any bike by swiping your ticket (s) on the handlebars of a bicycle !\n\nYou can return your bike to any station. Make sure your bike is properly locked when you return it to an attachment point. A green light and a double beep should confirm the correct hanging up"
+    "answer": "It is not necessary to create a Vélo'v account to access the service.\n\nIt is possible to purchase occasional formulas for 1 trip or for 24 hours at the Vélo'v stations equipped with an electronic payment terminal. (To find out the electronic payment terminals, consult the station map on the website or the official Vélo'v mobile application and apply the filter \"only e-money stations\")\n\n1. Go to a Vélo'v reception and subscription terminal equipped with a payment terminal\n2. Click on \"Buy a plan\" on the home screen\n3. Choose the option of your choice: \"Vélo'v 1 trip\" at 1.80 euros for a single trip or \"Vélo'v 24 hours\" at 4 euros to perform an unlimited number of trips for 24 hours\n4. Indicate the number of formulas desired (up to 5 formulas) and choose a 6-digit secret code\n5. Insert your VISA or MASTERCARD and follow the instructions\n\nThe terminal will issue you as many access tickets as there are purchased subscriptions. \n\nWith the temporaray tickets, you access to all the Vélo'v network and can unlock any bike by swiping your ticket (s) on the handlebars of a bicycle !\n\nYou can return your bike to any station. Make sure your bike is properly locked when you return it to an attachment point. A green light and a double beep should confirm the correct hanging up"
+  },
+  {
+    "id": "faq-how-much-is-a-journey",
+    "topic": "Journeys",
+    "question": "How much is a journey ?",
+    "answer": "If you have an annual offer (Vélo'v 1 year, Vélo'v 1 year Young 14-25 years old, Vélo'v RSA), you benefit from 30 first minutes each trip, or 45 minutes free if you have also associated your Vélo'v subscription with a partner card TCL, OURA, or LPA, TRABOULE. Over the free period, journeys are billed per minute according to the following rates: 1st 1 / 2h fee: 0.10 € / min; 2nd 1 / 2h fee: 0,15 € / min; 3rd half hour pay: 0,20 € / min.\n\nThe \"Vélo'v 1 Journey\" offer allows for a single trip for 1.80 euros, including half an hour of use. If you keep the bike over 30 minutes, the excess is charged per additional minute according to the following tariff: 1st 1 / 2h fee: 0.10 € / min; 2nd 1 / 2h fee: 0,15 € / min; 3rd half hour pay: 0,20 € / min."
+  },
+  {
+    "id": "faq-update-my-credit-card",
+    "topic": "Payments",
+    "question": "Update my credit card",
+    "answer": "Just log on to the official Vélo'v website or application, go to the \"My profile\" section and click on \"change my CB\".\nThe new registered card will be used for the consumption and billing of the deposit in case of non-compliance with the General Conditions of Access and Use of the Vélo'v service."
   },
   {
     "id": "faq-how-to-access-to-the-service-with-a-smartphone",
@@ -12,10 +24,46 @@
     "answer": "To access the service with your smartphone, you must download the Vélo'v Official application (Android or IOS) and have a Vélo'v account.\n\nBy creating a Vélo'v account for the first time, from the official Vélo'v mobile application or on our website, you will facilitate all subsequent times and enjoy an even richer experience with a multitude of exclusive services: '' a bike in advance, release of a bike from the application, control of your billing, access to your dashboard, end of trip notification, access to customer support, rental of several bikes at the same time).\n\nOnce your Vélo'v account has been created, you have access to all the subscription packages offered: Annual or occasional package (1 trip or 1 24-hour ticket)\n\nTo create your Vélo'v account, from the website or the website\n\n1 - Click on SUBSCRIBE\n2 - Enter your email address and choose a 6-digit secret code\n3 - Click on the validation link you received by email\n4 - Then let yourself be guided\n\nWhatever the formula chosen, you immediately access the service and can release a bicycle from the \"official velo'v\" mobile application or by connecting to a Velo'v reception and subscription terminal by entering your number. subscription and your secret code\n\nIf you have chosen an annual subscription plan, you will also receive a free access card to the service or can activate your Velo'v subscription on your técély, or Oura or LPA card.\n\nIf the words \"You are not eligible for the offer\" appear when you select an offer, it means that you already have a valid or recently expired annual subscription. To take out a new subscription or renew your current subscription, you must go to the \"my plans\" section of your personal space then click on \"resubscribe\".\n\nSome offers may also be age-dependent. The service is only accessible to people who are at least 14 years old on the day of subscription."
   },
   {
+    "id": "faq-how-to-dispute-a-payment",
+    "topic": "Payments",
+    "question": "How to dispute a payment?",
+    "answer": "If you have used the service recently, you may notice a debit from your bank account a few days later. This debit generally corresponds to the amount of one or more subscription packages taken out or journeys recently made.\n\n- The subscription is paid on the day of purchase. \n- Any paid journeys are invoiced and debited within 6 days if you have bought a 1-day ticket or a 1-trip ticket, or every month if you have an annual season ticket.\n\nTo dispute a journey or a package, go to the \"need help\" section of your personal space and select the journey from the journeys you have made (30-day history) or go to the \"my packages\" section of your personal space and select the package you are disputing.\n\nIf your complaint concerns a payment made at a Vélo'v reception and subscription terminal, take your subscription ticket with you and contact the Vélo'v helpline on 01 30 79 33 40. If you have not kept your subscription ticket, please take all the information relating to the transaction with you so that we can carry out a detailed search. (date of transaction, amount, bank card debited, etc.)"
+  },
+  {
+    "id": "faq-how-does-the-bike-evaluation-work",
+    "topic": "Journeys",
+    "question": "how does the bike evaluation work?",
+    "answer": "You can recommend or discourage the last used bike by clicking on the notification received at the end of your trip. If you do not receive them, make sure that you have authorized your smartphone to receive notifications from the official Vélo'v app.\n\nIn case of problem on the bike, you can specify the nature of the fault,\n\nThe more recent a recommendation is, the more it will weigh in the bike's rating!\n\nThanks to the evaluation of bicycles, you actively contribute to the improvement by reporting these incidents to the maintenance department and help other users to choose their own bike more simply and quickly."
+  },
+  {
+    "id": "faq-regularize-my-payments",
+    "topic": "Payments",
+    "question": "Regularize my payments",
+    "answer": "In case of rejection of payment, or if your bank card is no longer valid at the time of payment, your account is blocked:\n\nTo unblock your account, follow these steps:\n\n1- In your personal space, on the mobile application or on the website, go to \"my payments\"\n2- Click on \"Regularize my payments\"\n3- Update your payment information\n4- Validate the payment"
+  },
+  {
     "id": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely",
     "topic": "Subscriptions",
     "question": "How to activate a Vélo'v Express card or a partner card (Técély, OùRA, Bluely)?",
     "answer": "At the time of your subscription, you are invited to choose the offer and the support of your subscription.\nTo activate your card, go to one of the 348 Vélo'v stations, with your card and your secret code chosen when you subscribe.\nYou can associate your Vélo'v subscription to a partner card at any time from the \"My formulas\" section, by clicking on the desired formula and \"I change support\"."
+  },
+  {
+    "id": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail",
+    "topic": "Journeys",
+    "question": "Why departure and arrival stations are not displayed in the journey detail ?",
+    "answer": "As part of its policy of protecting personal data, the Vélo'v service does not keep details of your trips: the departure station and the arrival station are deleted immediately for free trips, and are deleted after 30 days regarding the journeys that have been invoiced. This delay lets the user the necessary time to obtain detailed information on his journey and make a possible complaint to the customer service."
+  },
+  {
+    "id": "faq-how-to-report-a-problem-about-a-journey",
+    "topic": "Journeys",
+    "question": "How to report a problem about a journey ?",
+    "answer": "I don't agree with theThe cost of the journey depends on its duration and your subscription package.\n\nIf the bike is returned after the maximum authorised time, and in the absence of any incident reported by the customer at the time of return or detected by the service, a penalty will be applied in accordance with the conditions of access and use of the service:\n\n-Bicycle returned/retrieved within 48 hours: 75 euros\n-Bicycle returned/retrieved within 7 days: 100 euros\n-Bicycle not returned/not found within 7 days: 150 euros\n\nOnly if the bike is properly hung up at the docking station can the journey be completed and billing stopped: a visual and audible signal at the docking point and an end-of-trip notification on the mobile application inform you that the bike has been returned. In the event of a problem, you can use the assistance available in the \"need help\" section of the mobile application to report an incident or contact customer service.\n\nIf you did not report an incident when your bike was returned and wish to dispute the amount of the invoice, go to the \"need help\" section of the mobile application to check your journey. amount of the journey"
+  },
+  {
+    "id": "faq-how-to-obtain-proof-of-payment-and-subscription",
+    "topic": "Payments",
+    "question": "How to obtain proof of payment and subscription?",
+    "answer": "From the velov.grandlyon.com website or the mobile application, log into your customer area\n\nTo obtain proof of payment,\n1 - Go to the \"my payments\" section of your customer area\n2 - Select the transaction\n3 - Click on \"Download proof\"\n\nTo obtain proof of subscription,\n1 - Go to the \"my formulas\" section of your customer area\n2 - Select the desired formula\n3 - Click on \"Download proof\"\n\nIf the function is not available from your smartphone, go to the velov.grandlyon.com website"
   },
   {
     "id": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support",
@@ -24,16 +72,40 @@
     "answer": "In case of loss or theft of your access card, you can request its immediate suspension by going to your personal space, on the website or the official Vélo'v application, in the \"My plans\" section and then clicking on \"I lost my support\" for the selected subscription.\n\nThe card will be immediately blocked, and you can choose to replace it with a new Vélo'v card for 5 euros or a partner card (Técély, LPA, Oura) to get from your operator.\n\nWhile waiting to receive a new service access support, you continue to access the service with the official Vélo'v mobile application, or by entering your subscriber number and your 6-digit secret code, at a Vélo'v station"
   },
   {
+    "id": "faq-how-to-return-his-bike-when-the-station-is-full",
+    "topic": "Journeys",
+    "question": "How to return his bike when the station is full ?",
+    "answer": "If the station is full, \n\n1. Go to the \"need help\" section of the mobile application or sign in at the terminal with your card or ticket. \n2. Consult the nearest stations with available spaces\n3. Get an extra 15 minutes free of charge to get to the nearest station."
+  },
+  {
     "id": "faq-i-did-not-receive-my-v-lo-v-card",
     "topic": "Subscriptions",
     "question": "I did not receive my Vélo'v Card",
     "answer": "The time to receive your Velo'v card is approximately 5 to 8 days from the date of the request.\n\nWhile waiting for the receipt of your card, you can still access the service, without going through the terminal through the mobile application \"Velo'v official\" available on IOS and Android, and - or from a bike docking station v Enter your subscriber number and 6-digit PIN."
   },
   {
+    "id": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account",
+    "topic": "Payments",
+    "question": "Why does a pre-authorisation of 150 euros appear on my bank account?",
+    "answer": "A request for pre-authorisation of 150 euros is made to your bank for the purposes of verifying the bank card, when the bank card is registered on your Vélo'v account. \n\nThe pre-authorisation request does not constitute a debit by the Velo'v service.\n\nIt does, however, result in a provision of 150 euros being debited from your account for a period of 24 hours in general and up to 7 days depending on the banking establishment."
+  },
+  {
+    "id": "faq-how-to-take-a-break-during-a-ride",
+    "topic": "Journeys",
+    "question": "How to take a break during a ride ?",
+    "answer": "The bike is fitted with a built-in lock system with a key for temporary stops outside a station.  \n\nLock the handlebars on the right or left, press the button and take the key.\n\nTo unlock the lock, insert the key back into the shaft. The key retracts automatically and the handlebars unlock."
+  },
+  {
     "id": "faq-cancel-the-automatic-renewal-of-my-annual-subscription",
     "topic": "Subscriptions",
     "question": "Cancel the automatic renewal of my annual subscription",
     "answer": "You can disable the auto-renew option in the \"My Forms\" section by selecting the current subscription."
+  },
+  {
+    "id": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding",
+    "topic": "Journeys",
+    "question": "Why is my e-Vélo'v beeping while I am riding?",
+    "answer": "When the bike beeps during the ride bike, it's an overspeed signal, as soon as you exceed 32km / h.\nIt's a safety feature to let you know that the speed limit is exceeded."
   },
   {
     "id": "faq-obtain-a-proof-of-subscription",
@@ -48,10 +120,28 @@
     "answer": "On the official Vélo'v website or application, your username is your email address.\nTo reset your PIN click on \"Forgot Password\", a reset email will be sent to you instantly.\nYou will also find your access code and your formula number in the \"My formulas\" section or on the purchase confirmation email.\nIf you bought your ticket in the station, your access code is specified on your ticket and we can not restore your secret code because we do not have the information."
   },
   {
+    "id": "faq-what-is-the-v-lo-v-rewards-program",
+    "topic": "Journeys",
+    "question": "What is the Vélo'v rewards program ?",
+    "answer": "Vélo'v has set up a rewards program which aims to encourage certain actions in favor of the service and for the benefit of the whole Vélo'v community, and to promote active users with exclusive advantages!\n\nHow to earn rewards ?\n- Rate a bike at the end of a journey : + 5 points\n- Take your Vélo'v from a full station: +10 points\n- Return your Vélo'V to a completely empty station: + 10 points\n\nHow do I use my loyalty points?\n\n- Invite a friend: 50 points\n- Book a bike in advance for 15 minutes: 10 points\n- Pay my journeys in rewards beyond the free period: 1 cts = 2 points\n(By checking in your profile / my preferences, the option \"automatically use my rewards points when my trips exceed the free period\")"
+  },
+  {
     "id": "faq-how-to-renew-an-annual-subscription",
     "topic": "Subscriptions",
     "question": "How to renew an annual subscription?",
     "answer": "To renew an annual subscription, go to the \"my formulas\" section and select the annual subscription that you want to renew.\nFor more peace of mind, you can also check the automatic renewal of your subscription when it expires. This option is free and can be deactivated at any time up to 3 days before the expiration date of the subscription."
+  },
+  {
+    "id": "faq-is-it-to-book-a-bike-in-advance",
+    "topic": "Journeys",
+    "question": "Is it to book a bike in advance ?",
+    "answer": "This option is only accessible from the mobile application \"vélo'v Officiel\" \n\nTo book a Vélo'v, follow the steps below:\n\n1- Select your starting station\n2- In the list of bikes available in the station, choose the best rated bike and click on the side menu in order to book it\n3- Confirm the reservation\n\nYou have 15 minutes to collect your Vélo'v. Beyond this period, the bike is again available to other users.\nIf you do not take your Vélo'v or take another Vélo'v, the reservation is neither cancellable nor refundable."
+  },
+  {
+    "id": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty",
+    "topic": "Journeys",
+    "question": "What should I do if I find that my bike is faulty?",
+    "answer": "The bikes are checked very regularly by mobile mechanics, based on reports made by customers via the mobile app and preventive maintenance cycles for certain parts. They return to the workshop as soon as necessary for more extensive repairs.\n\nOnce a bike has passed through the hands of our technicians, it is marked ‘serviced’ on the mobile application. This indication disappears as soon as a customer makes a new assessment of the bike.\n\nWhile the rating left by previous customers is generally a good indicator of the bike's condition, it's always a good idea to check that there are no visible defects before taking the bike out of storage.\n\nIf you notice a problem with your bike after taking it out of its attachment point, you must return it to its original position immediately and within a maximum of 2 minutes to avoid being charged for the journey.\n\nYou can report a faulty bike from the mobile application, either by clicking on the return notification received on the smartphone, or by going to the \"need help\" section of the mobile application, then the \"other requests\" section, \"report a faulty bike\"."
   },
   {
     "id": "faq-what-does-it-mean-you-can-not-choose-this-plan",
@@ -63,13 +153,13 @@
     "id": "faq-close-his-her-subscription",
     "topic": "Subscriptions",
     "question": "Close his/her subscription ?",
-    "answer": "The Vélo'v subscription runs for 12 months and ends automatically on its anniversary date.\n\nIf you have opted for automatic renewal of your subscription on its anniversary date, you can cancel it from your customer area. To do this, simply go to the \"my packages\" section and select the subscription package you wish to stop: the \"automatic renewal\" option can be activated or deactivated at any time, up to 3 days before the anniversary date.\n\nIf you have taken out a subscription by mistake on the website or mobile application and have not used the service, you have 15 days in which to request its cancellation and reimbursement. All you have to do is go to the \"need help\" section of the official Vélo'v mobile application, then click on \"subscriptions\", then \"I want to cancel my subscription\"."
+    "answer": "The Vélo'v subscription runs for 12 months and ends automatically on its anniversary date. \n\nIf you have opted for automatic renewal of your subscription on its anniversary date, you can cancel it from your customer area. To do this, simply go to the \"my packages\" section and select the subscription package you wish to stop: the \"automatic renewal\" option can be activated or deactivated at any time, up to 3 days before the anniversary date.\n\nIf you have taken out a subscription by mistake on the website or mobile application and have not used the service, you have 15 days in which to request its cancellation and reimbursement. All you have to do is go to the \"need help\" section of the official Vélo'v mobile application, then click on \"subscriptions\", then \"I want to cancel my subscription\"."
   },
   {
     "id": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account",
     "topic": "Subscriptions",
     "question": "How to Invite a friend thanks to my Velo'v Account ?",
-    "answer": "The ‘Invite a friend’ option allows you to unlock a second bike with your smartphone in exchange for 50 Vélo'v points.\n\nYour guest's journey is free for the first 30 minutes with a mechanical bike or €1 with an electric bike for the first 30 minutes, then charged according to the current pricing for the 1-journey option: 1st 30 minutes: €0.10/min; 2nd 30 minutes: €0.15/min; 3rd half hour charged: €0.20/min. Maximum charge set at €50/rental.\n\nTo earn Vélo'v points, simply return your bike to a completely empty station (+10 points), or take a bike from a completely full station (+10 points).\n\nIf you do not have enough loyalty points, you can also purchase a single journey or 24-hour package from the ‘OUR PACKAGES’ section."
+    "answer": "The ‘Invite a friend’ option allows you to unlock a second bike with your smartphone in exchange for 50 Vélo'v points. \n\nYour guest's journey is free for the first 30 minutes with a mechanical bike or €1 with an electric bike for the first 30 minutes, then charged according to the current pricing for the 1-journey option: 1st 30 minutes: €0.10/min; 2nd 30 minutes: €0.15/min; 3rd half hour charged: €0.20/min. Maximum charge set at €50/rental.\n\nTo earn Vélo'v points, simply return your bike to a completely empty station (+10 points), or take a bike from a completely full station (+10 points).\n\nIf you do not have enough loyalty points, you can also purchase a single journey or 24-hour package from the ‘OUR PACKAGES’ section."
   },
   {
     "id": "faq-modify-my-email-adress",
@@ -99,7 +189,7 @@
     "id": "faq-how-do-i-change-my-subscription",
     "topic": "Subscriptions",
     "question": "How do I change my subscription?",
-    "answer": "If you would like to switch from your current subscription to the new Vélo'v Plus package without delay, so that you can take full advantage of Vélo'v electric, you can do so directly from the official Vélo'v application.\nTo do this, go to the ‘Need help?’ section ‘Subscription’, then ‘I want to change my subscription’.\nYou will then be reimbursed on a pro rata basis for your current subscription, then re-enrolled on the new Vélo'v Plus offer for 1 year."
+    "answer": "If you would like to switch from your current subscription to the new Vélo'v Plus package without delay, so that you can take full advantage of Vélo'v electric, you can do so directly from the official Vélo'v application. \nTo do this, go to the ‘Need help?’ section ‘Subscription’, then ‘I want to change my subscription’. \nYou will then be reimbursed on a pro rata basis for your current subscription, then re-enrolled on the new Vélo'v Plus offer for 1 year."
   },
   {
     "id": "faq-what-is-the-mobility-discovery-offer",
@@ -111,102 +201,12 @@
     "id": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer",
     "topic": "Subscriptions",
     "question": "How do I activate my Vélo’v Plus subscription as part of the Mobility Discovery Offer?",
-    "answer": "If you are eligible for the Mobility Discovery Offer, simply:\nCreate an account on the Vélo’v mobile app or website.\nSign up for the “Vélo’v Mobility Discovery Offer” package (available here: https://velov.grandlyon.com/fr/offers/groups/list#180), making sure to:\nAttach the certificate provided by Toodego (certificate dated less than 30 days ago)\nEnter the discount code mentioned on your Toodego certificate, just above the payment area.\n\nYou can then immediately enjoy your Vélo’v Plus subscription for 3 months.\n\nThis subscription gives you access to both types of bike for 3 months and includes the use of electric Vélo’v bikes at no extra cost, up to a limit of 6 trips per day:\n• If you use a mechanical Vélo’v bike: unlimited trips with the first 30 minutes free on each trip (45 minutes if you are a TCL, LPA, Citiz, QPARK, VINCI parking or Effia Parking subscriber).\n• If you use an electric Vélo’v: 6 trips per day with the first 30 minutes free (+€1 per additional 30-minute trip, from the first minute).\nBeyond that, the following rates apply, regardless of the type of Vélo’v used: 1st extra half hour: €0.10/min; 2nd extra half hour: €0.15/min; 3rd extra half hour: €0.20/min."
+    "answer": "If you are eligible for the Mobility Discovery Offer, simply:\nCreate an account on the Vélo’v mobile app or website.\nSign up for the “Vélo’v Mobility Discovery Offer” package (available here: https://velov.grandlyon.com/fr/offers/groups/list#180), making sure to:\nAttach the certificate provided by Toodego (certificate dated less than 30 days ago)\nEnter the discount code mentioned on your Toodego certificate, just above the payment area.\n\nYou can then immediately enjoy your Vélo’v Plus subscription for 3 months. \n\nThis subscription gives you access to both types of bike for 3 months and includes the use of electric Vélo’v bikes at no extra cost, up to a limit of 6 trips per day: \n• If you use a mechanical Vélo’v bike: unlimited trips with the first 30 minutes free on each trip (45 minutes if you are a TCL, LPA, Citiz, QPARK, VINCI parking or Effia Parking subscriber). \n• If you use an electric Vélo’v: 6 trips per day with the first 30 minutes free (+€1 per additional 30-minute trip, from the first minute).\nBeyond that, the following rates apply, regardless of the type of Vélo’v used: 1st extra half hour: €0.10/min; 2nd extra half hour: €0.15/min; 3rd extra half hour: €0.20/min."
   },
   {
     "id": "faq-delete-an-account",
     "topic": "Subscriptions",
     "question": "Delete an account",
     "answer": "You can request account deletion by going to the \"Profile\" page of the mobile app and selecting \"Delete Account\" from the menu in the top right corner.\n\nAccount deletion is permanent and irreversible.\n\nIt is not possible if you have pending transactions or if you have recently taken trips that are still pending billing. Similarly, if you currently have a bike in use, you cannot delete your account. If you have pending payments, you must settle them first. If you have recently taken paid trips, you must wait until they are billed (according to your billing cycle: either 30 days from the anniversary of your annual subscription or within 7 days of purchasing a 1-trip or 24-hour pass)."
-  },
-  {
-    "id": "faq-how-much-is-a-journey",
-    "topic": "Journeys",
-    "question": "How much is a journey ?",
-    "answer": "If you have an annual offer (Vélo'v 1 year, Vélo'v 1 year Young 14-25 years old, Vélo'v RSA), you benefit from 30 first minutes each trip, or 45 minutes free if you have also associated your Vélo'v subscription with a partner card TCL, OURA, or LPA, TRABOULE. Over the free period, journeys are billed per minute according to the following rates: 1st 1 / 2h fee: 0.10 € / min; 2nd 1 / 2h fee: 0,15 € / min; 3rd half hour pay: 0,20 € / min.\n\nThe \"Vélo'v 1 Journey\" offer allows for a single trip for 1.80 euros, including half an hour of use. If you keep the bike over 30 minutes, the excess is charged per additional minute according to the following tariff: 1st 1 / 2h fee: 0.10 € / min; 2nd 1 / 2h fee: 0,15 € / min; 3rd half hour pay: 0,20 € / min."
-  },
-  {
-    "id": "faq-how-does-the-bike-evaluation-work",
-    "topic": "Journeys",
-    "question": "how does the bike evaluation work?",
-    "answer": "You can recommend or discourage the last used bike by clicking on the notification received at the end of your trip. If you do not receive them, make sure that you have authorized your smartphone to receive notifications from the official Vélo'v app.\n\nIn case of problem on the bike, you can specify the nature of the fault,\n\nThe more recent a recommendation is, the more it will weigh in the bike's rating!\n\nThanks to the evaluation of bicycles, you actively contribute to the improvement by reporting these incidents to the maintenance department and help other users to choose their own bike more simply and quickly."
-  },
-  {
-    "id": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail",
-    "topic": "Journeys",
-    "question": "Why departure and arrival stations are not displayed in the journey detail ?",
-    "answer": "As part of its policy of protecting personal data, the Vélo'v service does not keep details of your trips: the departure station and the arrival station are deleted immediately for free trips, and are deleted after 30 days regarding the journeys that have been invoiced. This delay lets the user the necessary time to obtain detailed information on his journey and make a possible complaint to the customer service."
-  },
-  {
-    "id": "faq-how-to-report-a-problem-about-a-journey",
-    "topic": "Journeys",
-    "question": "How to report a problem about a journey ?",
-    "answer": "I don't agree with theThe cost of the journey depends on its duration and your subscription package.\n\nIf the bike is returned after the maximum authorised time, and in the absence of any incident reported by the customer at the time of return or detected by the service, a penalty will be applied in accordance with the conditions of access and use of the service:\n\n-Bicycle returned/retrieved within 48 hours: 75 euros\n-Bicycle returned/retrieved within 7 days: 100 euros\n-Bicycle not returned/not found within 7 days: 150 euros\n\nOnly if the bike is properly hung up at the docking station can the journey be completed and billing stopped: a visual and audible signal at the docking point and an end-of-trip notification on the mobile application inform you that the bike has been returned. In the event of a problem, you can use the assistance available in the \"need help\" section of the mobile application to report an incident or contact customer service.\n\nIf you did not report an incident when your bike was returned and wish to dispute the amount of the invoice, go to the \"need help\" section of the mobile application to check your journey. amount of the journey"
-  },
-  {
-    "id": "faq-how-to-return-his-bike-when-the-station-is-full",
-    "topic": "Journeys",
-    "question": "How to return his bike when the station is full ?",
-    "answer": "If the station is full,\n\n1. Go to the \"need help\" section of the mobile application or sign in at the terminal with your card or ticket.\n2. Consult the nearest stations with available spaces\n3. Get an extra 15 minutes free of charge to get to the nearest station."
-  },
-  {
-    "id": "faq-how-to-take-a-break-during-a-ride",
-    "topic": "Journeys",
-    "question": "How to take a break during a ride ?",
-    "answer": "The bike is fitted with a built-in lock system with a key for temporary stops outside a station.\n\nLock the handlebars on the right or left, press the button and take the key.\n\nTo unlock the lock, insert the key back into the shaft. The key retracts automatically and the handlebars unlock."
-  },
-  {
-    "id": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding",
-    "topic": "Journeys",
-    "question": "Why is my e-Vélo'v beeping while I am riding?",
-    "answer": "When the bike beeps during the ride bike, it's an overspeed signal, as soon as you exceed 32km / h.\nIt's a safety feature to let you know that the speed limit is exceeded."
-  },
-  {
-    "id": "faq-what-is-the-v-lo-v-rewards-program",
-    "topic": "Journeys",
-    "question": "What is the Vélo'v rewards program ?",
-    "answer": "Vélo'v has set up a rewards program which aims to encourage certain actions in favor of the service and for the benefit of the whole Vélo'v community, and to promote active users with exclusive advantages!\n\nHow to earn rewards ?\n- Rate a bike at the end of a journey : + 5 points\n- Take your Vélo'v from a full station: +10 points\n- Return your Vélo'V to a completely empty station: + 10 points\n\nHow do I use my loyalty points?\n\n- Invite a friend: 50 points\n- Book a bike in advance for 15 minutes: 10 points\n- Pay my journeys in rewards beyond the free period: 1 cts = 2 points\n(By checking in your profile / my preferences, the option \"automatically use my rewards points when my trips exceed the free period\")"
-  },
-  {
-    "id": "faq-is-it-to-book-a-bike-in-advance",
-    "topic": "Journeys",
-    "question": "Is it to book a bike in advance ?",
-    "answer": "This option is only accessible from the mobile application \"vélo'v Officiel\"\n\nTo book a Vélo'v, follow the steps below:\n\n1- Select your starting station\n2- In the list of bikes available in the station, choose the best rated bike and click on the side menu in order to book it\n3- Confirm the reservation\n\nYou have 15 minutes to collect your Vélo'v. Beyond this period, the bike is again available to other users.\nIf you do not take your Vélo'v or take another Vélo'v, the reservation is neither cancellable nor refundable."
-  },
-  {
-    "id": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty",
-    "topic": "Journeys",
-    "question": "What should I do if I find that my bike is faulty?",
-    "answer": "The bikes are checked very regularly by mobile mechanics, based on reports made by customers via the mobile app and preventive maintenance cycles for certain parts. They return to the workshop as soon as necessary for more extensive repairs.\n\nOnce a bike has passed through the hands of our technicians, it is marked ‘serviced’ on the mobile application. This indication disappears as soon as a customer makes a new assessment of the bike.\n\nWhile the rating left by previous customers is generally a good indicator of the bike's condition, it's always a good idea to check that there are no visible defects before taking the bike out of storage.\n\nIf you notice a problem with your bike after taking it out of its attachment point, you must return it to its original position immediately and within a maximum of 2 minutes to avoid being charged for the journey.\n\nYou can report a faulty bike from the mobile application, either by clicking on the return notification received on the smartphone, or by going to the \"need help\" section of the mobile application, then the \"other requests\" section, \"report a faulty bike\"."
-  },
-  {
-    "id": "faq-update-my-credit-card",
-    "topic": "Payments",
-    "question": "Update my credit card",
-    "answer": "Just log on to the official Vélo'v website or application, go to the \"My profile\" section and click on \"change my CB\".\nThe new registered card will be used for the consumption and billing of the deposit in case of non-compliance with the General Conditions of Access and Use of the Vélo'v service."
-  },
-  {
-    "id": "faq-how-to-dispute-a-payment",
-    "topic": "Payments",
-    "question": "How to dispute a payment?",
-    "answer": "If you have used the service recently, you may notice a debit from your bank account a few days later. This debit generally corresponds to the amount of one or more subscription packages taken out or journeys recently made.\n\n- The subscription is paid on the day of purchase.\n- Any paid journeys are invoiced and debited within 6 days if you have bought a 1-day ticket or a 1-trip ticket, or every month if you have an annual season ticket.\n\nTo dispute a journey or a package, go to the \"need help\" section of your personal space and select the journey from the journeys you have made (30-day history) or go to the \"my packages\" section of your personal space and select the package you are disputing.\n\nIf your complaint concerns a payment made at a Vélo'v reception and subscription terminal, take your subscription ticket with you and contact the Vélo'v helpline on 01 30 79 33 40. If you have not kept your subscription ticket, please take all the information relating to the transaction with you so that we can carry out a detailed search. (date of transaction, amount, bank card debited, etc.)"
-  },
-  {
-    "id": "faq-regularize-my-payments",
-    "topic": "Payments",
-    "question": "Regularize my payments",
-    "answer": "In case of rejection of payment, or if your bank card is no longer valid at the time of payment, your account is blocked:\n\nTo unblock your account, follow these steps:\n\n1- In your personal space, on the mobile application or on the website, go to \"my payments\"\n2- Click on \"Regularize my payments\"\n3- Update your payment information\n4- Validate the payment"
-  },
-  {
-    "id": "faq-how-to-obtain-proof-of-payment-and-subscription",
-    "topic": "Payments",
-    "question": "How to obtain proof of payment and subscription?",
-    "answer": "From the velov.grandlyon.com website or the mobile application, log into your customer area\n\nTo obtain proof of payment,\n1 - Go to the \"my payments\" section of your customer area\n2 - Select the transaction\n3 - Click on \"Download proof\"\n\nTo obtain proof of subscription,\n1 - Go to the \"my formulas\" section of your customer area\n2 - Select the desired formula\n3 - Click on \"Download proof\"\n\nIf the function is not available from your smartphone, go to the velov.grandlyon.com website"
-  },
-  {
-    "id": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account",
-    "topic": "Payments",
-    "question": "Why does a pre-authorisation of 150 euros appear on my bank account?",
-    "answer": "A request for pre-authorisation of 150 euros is made to your bank for the purposes of verifying the bank card, when the bank card is registered on your Vélo'v account.\n\nThe pre-authorisation request does not constitute a debit by the Velo'v service.\n\nIt does, however, result in a provision of 150 euros being debited from your account for a period of 24 hours in general and up to 7 days depending on the banking establishment."
   }
 ]

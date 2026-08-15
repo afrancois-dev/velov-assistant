@@ -64,7 +64,7 @@ def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     latency_llm = (time.perf_counter() - t0) * 1000
 
     tools_used = [part.tool_name for msg in result.all_messages() for part in msg.parts if isinstance(part, ToolReturnPart)]
-    usage = result.usage()
+    usage = result.usage
 
     meta = {
         "latency_retrieval_ms": round(latency_retrieval, 2),

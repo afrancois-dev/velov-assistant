@@ -15,7 +15,9 @@
 - clean and updates pyproject
 
 
-TODO: 
+TODO:
+- utiliser tqdm pour la progression de la génération du ground truth dataset synthétique
+- utiliser un autre llm pour le judge
 - mutualiser ces function_call (get_station_availability + find_nearest_bikes) en un seul
 - CI/CD
 - Ajouter un readme pour les correcteurs

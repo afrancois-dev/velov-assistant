@@ -73,13 +73,9 @@ def _faq() -> dict[str, str]:
     return {d["id"]: d["answer"] for d in json.loads(faq_file.read_text())}
 
 
-def _judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
+def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
     prompt = JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm)
     return cast(AnswerEvaluation, _judge_agent.run_sync(prompt).output)
-
-
-def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
-    return _judge(question=question, answer_orig=answer_orig, answer_llm=answer_llm)
 
 
 def _generate_answer(question: str) -> str:
