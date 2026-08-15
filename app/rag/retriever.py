@@ -41,7 +41,10 @@ def _embed(query: str) -> list[float]:
 
 def _doc_id(point: ScoredPoint) -> str:
     payload = point.payload or {}
-    return payload.get("id") or point.id
+    value = payload.get("id")
+    if value is None:
+        value = point.id
+    return str(value)
 
 
 def _to_hit(point: ScoredPoint) -> dict[str, Any]:
@@ -70,7 +73,7 @@ def _corpus() -> list[dict]:
         points, offset = client.scroll(
             settings.qdrant_collection, limit=256, offset=offset, with_payload=True, with_vectors=False
         )
-        docs.extend({"id": _doc_id(p), **p.payload} for p in points)
+        docs.extend({"id": _doc_id(p), **(p.payload or {})} for p in points)  # ty: ignore[invalid-argument-type]
         if offset is None:
             return docs
 

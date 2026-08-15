@@ -10,6 +10,7 @@ from app.rag import retriever
 
 ground_truth_file = Path("data/faq/ground_truth.json")
 
+
 @lru_cache(maxsize=1)
 def _load() -> list[dict]:
     return json.loads(ground_truth_file.read_text())

@@ -5,21 +5,19 @@ from __future__ import annotations
 import json
 import time
 
-import logfire
 from fastapi import FastAPI
+from openai.types.chat import ChatCompletionMessageFunctionToolCall, ChatCompletionMessageParam
 
 from app.config import settings
 from app.monitoring import metrics
-from app.monitoring.logfire_setup import configure_logfire, instrument
+
 from app.rag import retriever
 from app.rag.llm import get_client, rewrite_query
 from app.schemas import ChatRequest, ChatResponse, FeedbackRequest, Source
 from app.tools.stations import TOOL_IMPL, TOOL_SCHEMAS
 
-configure_logfire()
 
 app = FastAPI(title="Velo'v Assistant")
-instrument(app)
 
 
 _RAG_SYSTEM = (
@@ -42,7 +40,6 @@ def _context_block(sources: list[Source]) -> str:
     return "\n\n".join(f"[{i}] Q: {s.question}\nA: {s.answer}" for i, s in enumerate(sources, 1))
 
 
-@logfire.instrument("chat", extract_args=True)
 def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     started = time.perf_counter()
 
@@ -50,28 +47,36 @@ def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     sources = _retrieve_context(message)
     latency_retrieval = (time.perf_counter() - t0) * 1000
 
-    messages = [
-        {"role": "system", "content": _RAG_SYSTEM},
-        {"role": "system", "content": f"FAQ context:\n{_context_block(sources)}"},
+    combined_system_prompt = f"""{_RAG_SYSTEM}
+        FAQ context:
+        {_context_block(sources)}"""
+
+    messages: list[ChatCompletionMessageParam] = [
+        {"role": "system", "content": combined_system_prompt},
         {"role": "user", "content": message},
     ]
 
     t0 = time.perf_counter()
     resp = get_client().chat.completions.create(
-        model=settings.llm_model, messages=messages, tools=TOOL_SCHEMAS, tool_choice="auto"
+        model=settings.llm_model,
+        messages=messages,
+        tools=TOOL_SCHEMAS,
+        tool_choice="auto",
     )
     first = resp.choices[0].message
     tools_used: list[str] = []
 
     while first.tool_calls:
         for call in first.tool_calls:
-            if not (fn := TOOL_IMPL.get(call.function.name)):
+            if not isinstance(call, ChatCompletionMessageFunctionToolCall):
+                continue
+
+            fn_name = call.function.name
+            if not (fn := TOOL_IMPL.get(fn_name)):
                 continue
             args = json.loads(call.function.arguments or "{}")
-            with logfire.span(f"tool:{call.function.name}") as span:
-                result = fn(**args)
-                span.set_attribute("args", args)
-            tools_used.append(call.function.name)
+            result = fn(**args)
+            tools_used.append(fn_name)
             messages.append(
                 {"role": "tool", "tool_call_id": call.id, "content": json.dumps(result, ensure_ascii=False, default=str)}
             )

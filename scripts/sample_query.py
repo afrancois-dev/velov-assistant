@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import httpx
 
+
 BASE = "http://localhost:8000"
 
 

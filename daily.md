@@ -16,3 +16,4 @@ uv run ty check
     - remove stations ingestion
 - remove grafana and use pydantic logfire
 - update evaluation/
+- mettre dlt dans le diagramme

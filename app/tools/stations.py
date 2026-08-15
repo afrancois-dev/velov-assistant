@@ -2,48 +2,56 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
+
+from openai.types.chat import ChatCompletionToolParam
 
 from app.tools import grandlyon
 
-TOOL_SCHEMAS: list[dict[str, Any]] = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_station_availability",
-            "description": (
-                "Get real-time availability (bikes and free stands) for Velo'v stations "
-                "matching a station name, address or place in Lyon."
-            ),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "station_name_or_location": {
-                        "type": "string",
-                        "description": "A station name (e.g. 'Part-Dieu') or a place/address in Lyon.",
-                    }
+TOOL_SCHEMAS: list[ChatCompletionToolParam] = [
+    cast(
+        ChatCompletionToolParam,
+        {
+            "type": "function",
+            "function": {
+                "name": "get_station_availability",
+                "description": (
+                    "Get real-time availability (bikes and free stands) for Velo'v stations "
+                    "matching a station name, address or place in Lyon."
+                ),
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "station_name_or_location": {
+                            "type": "string",
+                            "description": "A station name (e.g. 'Part-Dieu') or a place/address in Lyon.",
+                        }
+                    },
+                    "required": ["station_name_or_location"],
                 },
-                "required": ["station_name_or_location"],
             },
         },
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "find_nearest_bikes",
-            "description": ("Find the nearest Velo'v stations with available bikes to a place, landmark or address in Lyon."),
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "place": {
-                        "type": "string",
-                        "description": "A place, landmark or address in Lyon (e.g. 'Part-Dieu station').",
-                    }
+    ),
+    cast(
+        ChatCompletionToolParam,
+        {
+            "type": "function",
+            "function": {
+                "name": "find_nearest_bikes",
+                "description": ("Find the nearest Velo'v stations with available bikes to a place, landmark or address in Lyon."),
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "place": {
+                            "type": "string",
+                            "description": "A place, landmark or address in Lyon (e.g. 'Part-Dieu station').",
+                        }
+                    },
+                    "required": ["place"],
                 },
-                "required": ["place"],
             },
         },
-    },
+    ),
 ]
 
 

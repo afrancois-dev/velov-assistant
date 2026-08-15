@@ -1,9 +1,11 @@
-"""dlt pipeline: scrape the Velo'v FAQ, chunk it and load it (embedded) into Qdrant.
+"""dlt pipeline: fetch the Velo'v FAQ from the Cyclocity API, chunk it and load it (embedded) into Qdrant.
 
-The FAQ is a JS SPA (rendered client-side from the auth-gated Cyclocity API), so a
-headless browser (Playwright) is used to render it and extract question/answer pairs.
-On success the scraped data is dumped to `data/faq/faq.json`; on failure (no browser,
-offline, changed DOM) that file is used as a reproducible fallback.
+The FAQ is served by the Cyclocity backend — the same API the velov.grandlyon.com SPA
+calls client-side. Access uses an anonymous client-token exchange: a public code/key pair
+(shipped in the SPA bundle) is posted to /auth/environments/PRD/client_tokens to obtain a
+short-lived access token, which then authorizes /contracts/lyon/faqs/search.
+On success the fetched data is dumped to `data/faq/faq.json`; on failure (offline, changed
+API) that file is used as a reproducible fallback.
 """
 
 from __future__ import annotations
@@ -13,42 +15,43 @@ import re
 from pathlib import Path
 
 import dlt
+import httpx
 from dlt.destinations.adapters import qdrant_adapter
 
-faq_url = "https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ"
-fallback_file = Path("/data/faq/faq.json")
+CLIENT_TOKEN_URL = "https://api.cyclocity.fr/auth/environments/PRD/client_tokens"
+FAQS_URL = "https://api.cyclocity.fr/contracts/lyon/faqs/search"
+# public client code/key shipped in the velov.grandlyon.com SPA bundle (not a secret).
+# Probably static per SPA release, not per session
+# I should fetch the js bundle and parse it to get the latest code/key pair, but for a first version this is good enough
+CLIENT_CODE = "vls.web.lyon:PRD"
+CLIENT_KEY = "c3d9f5c22a9157a7cc7fe0e38269573bdd2f13ec48f867360ecdcbd35b196f87"
+TOPICS = {"ABO": "Subscriptions", "RIDE": "Journeys", "PAY": "Payments"}
+
+fallback_file = Path("data/faq/faq.json")
 
 
 def _scrape_live() -> list[dict]:
-    from playwright.sync_api import sync_playwright
+    with httpx.Client(timeout=30.0, headers={"User-Agent": "velov-assistant/0.1"}) as client:
+        token = (
+            client.post(CLIENT_TOKEN_URL, json={"code": CLIENT_CODE, "key": CLIENT_KEY}).raise_for_status().json()["accessToken"]
+        )
+        groups = (
+            client.post(FAQS_URL, json={"language": "en"}, headers={"Authorization": f"Taknv1 {token}"}).raise_for_status().json()
+        )
 
     entries: list[dict] = []
-    with sync_playwright() as p:
-        page = p.chromium.launch(headless=True).new_page()
-        page.goto(faq_url, wait_until="networkidle", timeout=60_000)
-        page.wait_for_timeout(1500)
-
-        # each topic is a `.container` section with an <h2> header; questions live in
-        # `.line.clickable` rows whose answer (`div[body]`) renders on click.
-        sections = page.locator('[data-test-id="faq-list"] .container')
-        for si in range(sections.count()):
-            section = sections.nth(si)
-            topic = section.locator("h2").inner_text().strip()
-            lines = section.locator(".line.clickable")
-            for li in range(lines.count()):
-                line = lines.nth(li)
-                if not (question := line.locator('[data-test-id="faq-question"]').inner_text().strip()):
-                    continue
-                line.locator('[data-test-id="faq-question"]').click()
-                page.wait_for_timeout(300)
-                entries.append(
-                    {
-                        "id": f"faq-{re.sub(r'[^a-z0-9]+', '-', question.lower()).strip('-')}",
-                        "topic": topic,
-                        "question": question,
-                        "answer": line.locator("div[body]").inner_text().strip(),
-                    }
-                )
+    for group in groups:
+        topic = TOPICS.get(group["topicCode"], group["topicCode"])
+        for content in group["contents"]:
+            question = content["question"].strip()
+            entries.append(
+                {
+                    "id": f"faq-{re.sub(r'[^a-z0-9]+', '-', question.lower()).strip('-')}",
+                    "topic": topic,
+                    "question": question,
+                    "answer": content["response"].strip(),
+                }
+            )
     return entries
 
 

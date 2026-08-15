@@ -16,8 +16,8 @@ faq_file = Path("data/faq/faq.json")
 ground_truth_file = Path("data/faq/ground_truth.json")
 
 DATA_GEN_INSTRUCTIONS = """
-You emulate a customer who's interested in Velo'v, Lyon's bike-sharing service.
-Formulate 5 questions this customer might ask based on a FAQ record. The record
+You emulate a user who's interested in Velo'v, Lyon's bike-sharing service.
+Formulate 5 questions this user might ask based on a FAQ record. The record
 should contain the answer to the questions, and the questions should be complete and not too short.
 If possible, use as few words as possible from the record.
 
@@ -26,9 +26,10 @@ The output should resemble how people ask questions on the internet. Not too for
 
 
 class Questions(BaseModel):
-    questions: list[str] = Field(description="5 questions the customer might ask")
+    questions: list[str] = Field(description="5 questions the user might ask")
 
 
+# retry used just in case the llm formatting fails, which happens sometimes
 @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=60))
 def _generate(doc: dict) -> Questions:
     content = (

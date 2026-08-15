@@ -1,0 +1,702 @@
+[
+  {
+    "question": "Can I rent a bike just for the day without signing up for a subscription?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"
+  },
+  {
+    "question": "How do the 1-trip and 24-hour passes work if I don't have an account?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"
+  },
+  {
+    "question": "Which stations actually let you buy a temporary pass with a bank card?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"
+  },
+  {
+    "question": "What are the steps to get a ticket from the terminal using my credit card?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"
+  },
+  {
+    "question": "After buying a day pass, can I drop the bike off at any station in the network?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account"
+  },
+  {
+    "question": "Do I absolutely need the official app to unlock a bike with my phone, or does the mobile website work too?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone"
+  },
+  {
+    "question": "What are the exact steps to create an account from scratch on the app?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone"
+  },
+  {
+    "question": "If I buy a 24-hour pass on my phone, can I start riding right away without waiting for a physical card?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone"
+  },
+  {
+    "question": "I got a 'not eligible for this offer' error trying to sign up for the annual plan—what does that mean and how do I fix it?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone"
+  },
+  {
+    "question": "Can I link my annual subscription to my Técély card instead of carrying the Velo'v RFID card?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone"
+  },
+  {
+    "question": "I just got my Vélo'v Express card in the mail, what do I do to get it working at the docks?",
+    "document": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely"
+  },
+  {
+    "question": "Can I link my existing Técély card to my Vélo'v subscription instead of carrying a separate key?",
+    "document": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely"
+  },
+  {
+    "question": "Where exactly do I go to activate the card? Do I need to find a specific kiosk or does any station work?",
+    "document": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely"
+  },
+  {
+    "question": "I forgot the PIN I picked during sign-up. Can I still activate my card at the terminal?",
+    "document": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely"
+  },
+  {
+    "question": "Is it possible to switch my subscription over to an OùRA card a few months after I've already started my plan?",
+    "document": "faq-how-to-activate-a-v-lo-v-express-card-or-a-partner-card-t-c-ly-o-ra-bluely"
+  },
+  {
+    "question": "My Velo'v card was stolen, how do I lock it down fast?",
+    "document": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"
+  },
+  {
+    "question": "What's the process to get a replacement card if I lost mine, and how much does it cost?",
+    "document": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"
+  },
+  {
+    "question": "Can I still rent bikes while waiting for my new card to arrive?",
+    "document": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"
+  },
+  {
+    "question": "Where exactly in the app do I report my access card as missing?",
+    "document": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"
+  },
+  {
+    "question": "If I use a partner card like Técély, do I get the replacement from Velo'v or them?",
+    "document": "faq-what-to-do-in-case-of-theft-or-lost-of-your-service-access-support"
+  },
+  {
+    "question": "How long does it usually take for the Vélo'v card to show up in the mail?",
+    "document": "faq-i-did-not-receive-my-v-lo-v-card"
+  },
+  {
+    "question": "My card hasn't arrived yet—can I still rent a bike somehow?",
+    "document": "faq-i-did-not-receive-my-v-lo-v-card"
+  },
+  {
+    "question": "Is there an app I can use to unlock bikes while I wait for my physical card?",
+    "document": "faq-i-did-not-receive-my-v-lo-v-card"
+  },
+  {
+    "question": "What login details do I need to use the service at a docking station without the card?",
+    "document": "faq-i-did-not-receive-my-v-lo-v-card"
+  },
+  {
+    "question": "It's been over a week and no card, is that normal or should I contact someone?",
+    "document": "faq-i-did-not-receive-my-v-lo-v-card"
+  },
+  {
+    "question": "How do I stop my yearly subscription from renewing automatically?",
+    "document": "faq-cancel-the-automatic-renewal-of-my-annual-subscription"
+  },
+  {
+    "question": "Where can I turn off auto-renewal for my annual pass?",
+    "document": "faq-cancel-the-automatic-renewal-of-my-annual-subscription"
+  },
+  {
+    "question": "Can I cancel the automatic renewal on my Velo'v subscription?",
+    "document": "faq-cancel-the-automatic-renewal-of-my-annual-subscription"
+  },
+  {
+    "question": "How to disable auto-renew for my yearly Velo'v plan?",
+    "document": "faq-cancel-the-automatic-renewal-of-my-annual-subscription"
+  },
+  {
+    "question": "Is there a way to prevent my annual subscription from renewing on its own?",
+    "document": "faq-cancel-the-automatic-renewal-of-my-annual-subscription"
+  },
+  {
+    "question": "Where can I download a certificate showing I have an active Velo'v pass?",
+    "document": "faq-obtain-a-proof-of-subscription"
+  },
+  {
+    "question": "How do I get a proof of subscription document for my employer?",
+    "document": "faq-obtain-a-proof-of-subscription"
+  },
+  {
+    "question": "Is there a way to save an official subscription receipt from my account?",
+    "document": "faq-obtain-a-proof-of-subscription"
+  },
+  {
+    "question": "I need a document proving my membership, where is that located in the app?",
+    "document": "faq-obtain-a-proof-of-subscription"
+  },
+  {
+    "question": "Can I get a subscription confirmation letter from the 'My formulas' section?",
+    "document": "faq-obtain-a-proof-of-subscription"
+  },
+  {
+    "question": "I can't remember my login details for the Velo'v app, how do I get back into my account?",
+    "document": "faq-how-to-recover-my-v-lo-v-account-id-or-my-secret-code"
+  },
+  {
+    "question": "Where exactly do I find my subscription number and access code once I'm logged in?",
+    "document": "faq-how-to-recover-my-v-lo-v-account-id-or-my-secret-code"
+  },
+  {
+    "question": "If I bought a short-term ticket at the station kiosk, is there any way to retrieve the PIN if I lost the receipt?",
+    "document": "faq-how-to-recover-my-v-lo-v-account-id-or-my-secret-code"
+  },
+  {
+    "question": "Is my username for the website just my email address, or did I create a specific handle?",
+    "document": "faq-how-to-recover-my-v-lo-v-account-id-or-my-secret-code"
+  },
+  {
+    "question": "I clicked 'Forgot Password' but nothing arrived in my inbox, what should I check?",
+    "document": "faq-how-to-recover-my-v-lo-v-account-id-or-my-secret-code"
+  },
+  {
+    "question": "Where do I go in my account to renew my yearly pass?",
+    "document": "faq-how-to-renew-an-annual-subscription"
+  },
+  {
+    "question": "Can I set up my annual subscription to renew itself automatically?",
+    "document": "faq-how-to-renew-an-annual-subscription"
+  },
+  {
+    "question": "Is there a fee for turning on automatic renewal?",
+    "document": "faq-how-to-renew-an-annual-subscription"
+  },
+  {
+    "question": "How late can I cancel auto-renewal before my subscription expires?",
+    "document": "faq-how-to-renew-an-annual-subscription"
+  },
+  {
+    "question": "What's the process for manually renewing my annual subscription?",
+    "document": "faq-how-to-renew-an-annual-subscription"
+  },
+  {
+    "question": "I'm trying to sign up for a yearly pass but keep getting a message saying I can't choose this plan. What's going on?",
+    "document": "faq-what-does-it-mean-you-can-not-choose-this-plan"
+  },
+  {
+    "question": "Why am I blocked from buying an annual subscription? My old one expired a few months ago.",
+    "document": "faq-what-does-it-mean-you-can-not-choose-this-plan"
+  },
+  {
+    "question": "I want to renew my Velo'v subscription but there's no option to buy the annual plan again. How do I actually renew it?",
+    "document": "faq-what-does-it-mean-you-can-not-choose-this-plan"
+  },
+  {
+    "question": "Getting a 'cannot choose this plan' error even though I don't think I have an active subscription. Could it be an age restriction?",
+    "document": "faq-what-does-it-mean-you-can-not-choose-this-plan"
+  },
+  {
+    "question": "I think I entered the wrong birth date when I made my account and now I can't get the student/young person rate. Can support fix this?",
+    "document": "faq-what-does-it-mean-you-can-not-choose-this-plan"
+  },
+  {
+    "question": "Does my Velo'v pass renew automatically or do I need to cancel it myself?",
+    "document": "faq-close-his-her-subscription"
+  },
+  {
+    "question": "How do I turn off auto-renewal before my year is up?",
+    "document": "faq-close-his-her-subscription"
+  },
+  {
+    "question": "What's the deadline to stop the renewal from going through?",
+    "document": "faq-close-his-her-subscription"
+  },
+  {
+    "question": "I bought a subscription by mistake and haven't ridden yet, can I get a refund?",
+    "document": "faq-close-his-her-subscription"
+  },
+  {
+    "question": "Where in the app do I go to cancel a subscription I just started?",
+    "document": "faq-close-his-her-subscription"
+  },
+  {
+    "question": "Can I unlock a second bike for a friend using my app?",
+    "document": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account"
+  },
+  {
+    "question": "What does it cost in loyalty points to use the 'Invite a friend' feature?",
+    "document": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account"
+  },
+  {
+    "question": "If my guest takes an electric bike, is the first half hour really just one euro?",
+    "document": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account"
+  },
+  {
+    "question": "How do I actually earn those Vélo'v points to pay for the invitation?",
+    "document": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account"
+  },
+  {
+    "question": "What happens if I don't have 50 points saved up—can I still get a bike for someone?",
+    "document": "faq-how-to-invite-a-friend-thanks-to-my-velo-v-account"
+  },
+  {
+    "question": "How do I update the email address on my Velo'v account?",
+    "document": "faq-modify-my-email-adress"
+  },
+  {
+    "question": "Can I change my login email from the app or do I need the website?",
+    "document": "faq-modify-my-email-adress"
+  },
+  {
+    "question": "Where exactly is the option to edit my email in the profile settings?",
+    "document": "faq-modify-my-email-adress"
+  },
+  {
+    "question": "How long does the confirmation link stay valid after I request the change?",
+    "document": "faq-modify-my-email-adress"
+  },
+  {
+    "question": "What happens if I don't click the verification link within a day?",
+    "document": "faq-modify-my-email-adress"
+  },
+  {
+    "question": "How much does the yearly Velo'v pass cost if I'm a student or under 26?",
+    "document": "faq-v-lo-v-14-25-years-annual-membership"
+  },
+  {
+    "question": "What documents do I need to upload to prove my age for the youth discount?",
+    "document": "faq-v-lo-v-14-25-years-annual-membership"
+  },
+  {
+    "question": "Can you explain how the pricing works after the first free 30 minutes on the 14-25 plan?",
+    "document": "faq-v-lo-v-14-25-years-annual-membership"
+  },
+  {
+    "question": "I have a TCL card – does that actually give me extra free ride time on Velo'v?",
+    "document": "faq-v-lo-v-14-25-years-annual-membership"
+  },
+  {
+    "question": "Does the cheap annual subscription expire the moment I turn 26, or does it last the full year?",
+    "document": "faq-v-lo-v-14-25-years-annual-membership"
+  },
+  {
+    "question": "Can I grab multiple Vélo'v bikes at once for a group ride, or is it strictly one per person?",
+    "document": "faq-how-to-rent-several-bikes-at-the-same-time"
+  },
+  {
+    "question": "I don't have an account—can I just walk up to a station terminal and buy passes for me and my friends?",
+    "document": "faq-how-to-rent-several-bikes-at-the-same-time"
+  },
+  {
+    "question": "What's the maximum number of short-term tickets I can purchase in a single transaction at the kiosk?",
+    "document": "faq-how-to-rent-several-bikes-at-the-same-time"
+  },
+  {
+    "question": "If I already have a subscription, how do I unlock bikes for other people using the app?",
+    "document": "faq-how-to-rent-several-bikes-at-the-same-time"
+  },
+  {
+    "question": "Does the app let me pick which specific pass (like a 24h ticket vs a single trip) to use when unlocking each bike?",
+    "document": "faq-how-to-rent-several-bikes-at-the-same-time"
+  },
+  {
+    "question": "How many Vélo'v bikes actually have those tracking sensors on them?",
+    "document": "faq-why-are-some-v-lo-v-equipped-with-a-sensor"
+  },
+  {
+    "question": "What's the point of putting GPS sensors on some of the bikes?",
+    "document": "faq-why-are-some-v-lo-v-equipped-with-a-sensor"
+  },
+  {
+    "question": "Are the sensor-equipped bikes tracking my personal trips or just the bike's movement?",
+    "document": "faq-why-are-some-v-lo-v-equipped-with-a-sensor"
+  },
+  {
+    "question": "Since when have these sensors been on the bikes, and who decided to add them?",
+    "document": "faq-why-are-some-v-lo-v-equipped-with-a-sensor"
+  },
+  {
+    "question": "Will the data from these sensors change anything for me as a regular user?",
+    "document": "faq-why-are-some-v-lo-v-equipped-with-a-sensor"
+  },
+  {
+    "question": "Can I upgrade to the Vélo'v Plus plan right now or do I have to wait for my current pass to expire?",
+    "document": "faq-how-do-i-change-my-subscription"
+  },
+  {
+    "question": "Where exactly in the app do I go to switch over to the new electric bike subscription?",
+    "document": "faq-how-do-i-change-my-subscription"
+  },
+  {
+    "question": "If I switch mid-year, do I get money back for the months I haven't used on my old plan?",
+    "document": "faq-how-do-i-change-my-subscription"
+  },
+  {
+    "question": "Does changing my subscription lock me into a new 12-month contract automatically?",
+    "document": "faq-how-do-i-change-my-subscription"
+  },
+  {
+    "question": "Is the 'Need help?' section the only way to upgrade to the Plus offer in the app?",
+    "document": "faq-how-do-i-change-my-subscription"
+  },
+  {
+    "question": "I live in the Lyon Metropolis area—can I test out public transport and bikes for free for a few months?",
+    "document": "faq-what-is-the-mobility-discovery-offer"
+  },
+  {
+    "question": "How does that 3-month free trial for alternatives to driving actually work?",
+    "document": "faq-what-is-the-mobility-discovery-offer"
+  },
+  {
+    "question": "Who exactly counts as a resident for the Mobility Discovery deal? Is it the whole metro area?",
+    "document": "faq-what-is-the-mobility-discovery-offer"
+  },
+  {
+    "question": "Where do I go to check if my address qualifies for the free transport offer?",
+    "document": "faq-what-is-the-mobility-discovery-offer"
+  },
+  {
+    "question": "What kinds of transport are included besides the Velo'v bikes?",
+    "document": "faq-what-is-the-mobility-discovery-offer"
+  },
+  {
+    "question": "What steps do I need to take to get my free 3-month Vélo'v Plus subscription through the Mobility Discovery Offer?",
+    "document": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer"
+  },
+  {
+    "question": "Where exactly do I enter the Toodego discount code when signing up for the Mobility Discovery Offer?",
+    "document": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer"
+  },
+  {
+    "question": "Does the Toodego certificate need to be recent to qualify for the Mobility Discovery Offer?",
+    "document": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer"
+  },
+  {
+    "question": "How many electric bike rides can I take per day with the Mobility Discovery Offer subscription?",
+    "document": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer"
+  },
+  {
+    "question": "What happens if I keep an e-bike longer than 30 minutes on the Mobility Discovery Offer plan?",
+    "document": "faq-how-do-i-activate-my-v-lo-v-plus-subscription-as-part-of-the-mobility-discovery-offer"
+  },
+  {
+    "question": "How do I actually delete my Velo'v account from the app?",
+    "document": "faq-delete-an-account"
+  },
+  {
+    "question": "What happens if I try to delete my account while I still have a bike checked out?",
+    "document": "faq-delete-an-account"
+  },
+  {
+    "question": "Can I remove my account if I have a pending payment or recent trips that haven't been billed yet?",
+    "document": "faq-delete-an-account"
+  },
+  {
+    "question": "Is deleting my account permanent, or can I get it back later if I change my mind?",
+    "document": "faq-delete-an-account"
+  },
+  {
+    "question": "How long do I have to wait after a paid trip before I'm allowed to delete my profile?",
+    "document": "faq-delete-an-account"
+  },
+  {
+    "question": "I have the yearly pass linked to my TCL card – how long can I ride for free before I start getting charged?",
+    "document": "faq-how-much-is-a-journey"
+  },
+  {
+    "question": "What happens if I keep a bike out longer than the free 30 minutes on my annual subscription?",
+    "document": "faq-how-much-is-a-journey"
+  },
+  {
+    "question": "Can someone explain the per-minute pricing tiers once the free time runs out?",
+    "document": "faq-how-much-is-a-journey"
+  },
+  {
+    "question": "I just want to buy a single ride for today – how much is the '1 Journey' ticket and what does it include?",
+    "document": "faq-how-much-is-a-journey"
+  },
+  {
+    "question": "If I go over the 30 minutes on a single ticket, do the extra minutes cost the same as for subscribers?",
+    "document": "faq-how-much-is-a-journey"
+  },
+  {
+    "question": "How do I actually rate the bike I just rode once I've parked it?",
+    "document": "faq-how-does-the-bike-evaluation-work"
+  },
+  {
+    "question": "I never get the push notification to rate my ride, what settings should I check on my phone?",
+    "document": "faq-how-does-the-bike-evaluation-work"
+  },
+  {
+    "question": "Can I report a specific mechanical issue like a flat tire or broken bell when I give feedback?",
+    "document": "faq-how-does-the-bike-evaluation-work"
+  },
+  {
+    "question": "Does an old rating from months ago count the same as one I left yesterday?",
+    "document": "faq-how-does-the-bike-evaluation-work"
+  },
+  {
+    "question": "Why should I bother rating bikes—does it actually help fix them faster or help other riders?",
+    "document": "faq-how-does-the-bike-evaluation-work"
+  },
+  {
+    "question": "Why can't I see my start and end stations in my trip history?",
+    "document": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail"
+  },
+  {
+    "question": "How come the departure and arrival docks disappear from my ride details?",
+    "document": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail"
+  },
+  {
+    "question": "Is it normal that my journey log doesn't show where I picked up or dropped off the bike?",
+    "document": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail"
+  },
+  {
+    "question": "What's the reason Velo'v doesn't keep track of which stations I used?",
+    "document": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail"
+  },
+  {
+    "question": "My trip details are missing the station names, is this a bug or intentional?",
+    "document": "faq-why-departure-and-arrival-stations-are-not-displayed-in-the-journey-detail"
+  },
+  {
+    "question": "Why was I charged extra even though I brought the bike back?",
+    "document": "faq-how-to-report-a-problem-about-a-journey"
+  },
+  {
+    "question": "What happens if I keep the bike longer than the allowed time?",
+    "document": "faq-how-to-report-a-problem-about-a-journey"
+  },
+  {
+    "question": "How do I know for sure my ride has actually ended?",
+    "document": "faq-how-to-report-a-problem-about-a-journey"
+  },
+  {
+    "question": "Where do I go in the app to flag an issue with a trip?",
+    "document": "faq-how-to-report-a-problem-about-a-journey"
+  },
+  {
+    "question": "Can I dispute a charge if I forgot to report a problem when docking?",
+    "document": "faq-how-to-report-a-problem-about-a-journey"
+  },
+  {
+    "question": "What do I do if the Velo'v station is completely full when I try to return my bike?",
+    "document": "faq-how-to-return-his-bike-when-the-station-is-full"
+  },
+  {
+    "question": "How can I find the closest station with open docks if my destination is full?",
+    "document": "faq-how-to-return-his-bike-when-the-station-is-full"
+  },
+  {
+    "question": "Is there a way to get extra time for free when I can't park because the station is full?",
+    "document": "faq-how-to-return-his-bike-when-the-station-is-full"
+  },
+  {
+    "question": "Where in the app do I go to report a full station and find another spot?",
+    "document": "faq-how-to-return-his-bike-when-the-station-is-full"
+  },
+  {
+    "question": "Can I use the terminal to get help if the station is full and I don't have the app?",
+    "document": "faq-how-to-return-his-bike-when-the-station-is-full"
+  },
+  {
+    "question": "Can I lock the Velo'v bike if I need to stop somewhere that isn't a station?",
+    "document": "faq-how-to-take-a-break-during-a-ride"
+  },
+  {
+    "question": "How does the built-in lock and key work for a quick coffee break?",
+    "document": "faq-how-to-take-a-break-during-a-ride"
+  },
+  {
+    "question": "Is it possible to pause my ride and secure the bike on the street?",
+    "document": "faq-how-to-take-a-break-during-a-ride"
+  },
+  {
+    "question": "What are the steps to lock the handlebars temporarily using the key?",
+    "document": "faq-how-to-take-a-break-during-a-ride"
+  },
+  {
+    "question": "If I lock the bike for a break, how do I unlock it to keep riding?",
+    "document": "faq-how-to-take-a-break-during-a-ride"
+  },
+  {
+    "question": "My electric Velo'v keeps making a beeping noise when I'm cycling - what's going on?",
+    "document": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding"
+  },
+  {
+    "question": "Why does the e-bike start beeping suddenly while I'm riding it?",
+    "document": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding"
+  },
+  {
+    "question": "What does it mean when the Velo'v beeps during my trip?",
+    "document": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding"
+  },
+  {
+    "question": "Is there a reason my rented e-bike beeps when I go fast?",
+    "document": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding"
+  },
+  {
+    "question": "The electric bike beeps while I'm pedaling - is something wrong with it?",
+    "document": "faq-why-is-my-e-v-lo-v-beeping-while-i-am-riding"
+  },
+  {
+    "question": "How does the Vélo'v loyalty program actually work?",
+    "document": "faq-what-is-the-v-lo-v-rewards-program"
+  },
+  {
+    "question": "What are the different ways to rack up points?",
+    "document": "faq-what-is-the-v-lo-v-rewards-program"
+  },
+  {
+    "question": "Can I spend my points to book a bike ahead of time?",
+    "document": "faq-what-is-the-v-lo-v-rewards-program"
+  },
+  {
+    "question": "Is it possible to cover extra ride time with points instead of cash?",
+    "document": "faq-what-is-the-v-lo-v-rewards-program"
+  },
+  {
+    "question": "Do I get bonuses for picking up or dropping off bikes at specific stations?",
+    "document": "faq-what-is-the-v-lo-v-rewards-program"
+  },
+  {
+    "question": "Can I reserve a Vélo'v ahead of time using the app?",
+    "document": "faq-is-it-to-book-a-bike-in-advance"
+  },
+  {
+    "question": "What are the steps to book a specific bike before I get to the station?",
+    "document": "faq-is-it-to-book-a-bike-in-advance"
+  },
+  {
+    "question": "How long do I have to pick up the bike once I've reserved it?",
+    "document": "faq-is-it-to-book-a-bike-in-advance"
+  },
+  {
+    "question": "What happens if I'm late or decide not to take the bike I booked?",
+    "document": "faq-is-it-to-book-a-bike-in-advance"
+  },
+  {
+    "question": "Is the booking feature available on the website or just the official mobile app?",
+    "document": "faq-is-it-to-book-a-bike-in-advance"
+  },
+  {
+    "question": "I just unlocked a bike but the gears are slipping – can I put it back without being charged?",
+    "document": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty"
+  },
+  {
+    "question": "How do I actually report a broken bike in the app? I can't find the right menu.",
+    "document": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty"
+  },
+  {
+    "question": "There's a 'serviced' badge on the bike in the app. Does that mean it's definitely good to go?",
+    "document": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty"
+  },
+  {
+    "question": "What's the time limit for docking a faulty bike again so the ride doesn't count?",
+    "document": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty"
+  },
+  {
+    "question": "Do the bikes get regular maintenance or do they just wait for people to complain?",
+    "document": "faq-what-should-i-do-if-i-find-that-my-bike-is-faulty"
+  },
+  {
+    "question": "How do I swap out the bank card linked to my Velo'v account?",
+    "document": "faq-update-my-credit-card"
+  },
+  {
+    "question": "Where in the app can I update my payment details?",
+    "document": "faq-update-my-credit-card"
+  },
+  {
+    "question": "I got a new debit card, how do I add it to my profile?",
+    "document": "faq-update-my-credit-card"
+  },
+  {
+    "question": "What happens to the deposit hold when I register a different card?",
+    "document": "faq-update-my-credit-card"
+  },
+  {
+    "question": "Is the 'change my CB' option on the website or the mobile app?",
+    "document": "faq-update-my-credit-card"
+  },
+  {
+    "question": "I see a charge from Velo'v on my bank statement from a few days ago, what is this for?",
+    "document": "faq-how-to-dispute-a-payment"
+  },
+  {
+    "question": "How do I report a ride I didn't take or a pass I didn't buy?",
+    "document": "faq-how-to-dispute-a-payment"
+  },
+  {
+    "question": "Where exactly in my account do I go to challenge a specific trip?",
+    "document": "faq-how-to-dispute-a-payment"
+  },
+  {
+    "question": "Can I dispute a charge for a ticket I bought at a physical kiosk?",
+    "document": "faq-how-to-dispute-a-payment"
+  },
+  {
+    "question": "What details do I need to provide if I lost the receipt from the terminal?",
+    "document": "faq-how-to-dispute-a-payment"
+  },
+  {
+    "question": "My card got declined and now my Velo'v account is locked. How do I fix this?",
+    "document": "faq-regularize-my-payments"
+  },
+  {
+    "question": "I need to update my payment details because my old card expired. Where do I go in the app?",
+    "document": "faq-regularize-my-payments"
+  },
+  {
+    "question": "What does the 'Regularize my payments' button actually do? My account is blocked.",
+    "document": "faq-regularize-my-payments"
+  },
+  {
+    "question": "Payment failed and I can't rent bikes anymore. Steps to unblock my account?",
+    "document": "faq-regularize-my-payments"
+  },
+  {
+    "question": "Where exactly is the 'my payments' section on the website? I need to sort out a failed charge.",
+    "document": "faq-regularize-my-payments"
+  },
+  {
+    "question": "Where can I download a receipt for my Velo'v payments?",
+    "document": "faq-how-to-obtain-proof-of-payment-and-subscription"
+  },
+  {
+    "question": "How do I get an official proof of my current subscription?",
+    "document": "faq-how-to-obtain-proof-of-payment-and-subscription"
+  },
+  {
+    "question": "Is it possible to save my payment history from the mobile app?",
+    "document": "faq-how-to-obtain-proof-of-payment-and-subscription"
+  },
+  {
+    "question": "I can't find the 'Download proof' button on my phone, what should I do?",
+    "document": "faq-how-to-obtain-proof-of-payment-and-subscription"
+  },
+  {
+    "question": "Can I access my billing documents directly on the velov.grandlyon.com site?",
+    "document": "faq-how-to-obtain-proof-of-payment-and-subscription"
+  },
+  {
+    "question": "Just signed up and see a 150€ hold on my card—is that a real charge or just a check?",
+    "document": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account"
+  },
+  {
+    "question": "Why does Velo'v ask my bank to reserve 150€ when I add my card?",
+    "document": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account"
+  },
+  {
+    "question": "How long does that 150€ pre-auth usually stay pending on my account?",
+    "document": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account"
+  },
+  {
+    "question": "My bank shows a 150€ reservation from Velo'v; will I actually lose that money?",
+    "document": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account"
+  },
+  {
+    "question": "Does the 150€ hold happen every time I rent a bike or only when I first register my card?",
+    "document": "faq-why-does-a-pre-authorisation-of-150-euros-appear-on-my-bank-account"
+  }
+]
