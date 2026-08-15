@@ -24,18 +24,73 @@ application live side by side. Run all commands from the repo root.
 See [`docs/architecture.md`](docs/architecture.md) for the full mermaid diagram,
 directory structure and module-by-module plan.
 
+### Agent (runtime)
+
+```mermaid
+flowchart TB
+    U(["User"]) --> API["<img src='https://cdn.simpleicons.org/fastapi' width='16'/> FastAPI /chat"]
+    API --> AG["<img src='https://cdn.simpleicons.org/pydantic' width='16'/> pydantic-ai Agent<br/>(system prompt + tools)"]
+
+    subgraph RAG["RAG path"]
+        RW["query rewriting<br/>(pydantic-ai)"]
+        RET["hybrid retriever<br/>dense + BM25 + RRF"]
+        QD[("<img src='https://cdn.simpleicons.org/qdrant' width='16'/> Qdrant<br/>dense vectors")]
+        RR["<img src='https://cdn.simpleicons.org/huggingface' width='16'/> cross-encoder rerank<br/>(sentence-transformers)"]
+    end
+
+    subgraph TOOL["Tool path"]
+        TOOLS["function calling<br/>get_station_availability<br/>find_nearest_bikes"]
+        GL["Grand Lyon API<br/>stations (httpx + tenacity)"]
+        GEO["Photon geocoder"]
+    end
+
+    AG --> RW --> RET
+    RET --> QD
+    RET --> RR
+    AG --> TOOLS --> GL
+    TOOLS --> GEO
+
+    LLM["LLM<br/>(OpenCode Zen · deepseek)"]
+    RR --> LLM
+    GL --> LLM
+    LLM --> ANS(["answer"])
+
+    LF["Logfire<br/>traces + metrics"]
+    API -. traces / metrics .-> LF
 ```
-FAQ page ──scrape──▶ dlt ──embed──▶ Qdrant ──▶ hybrid retriever ─┐
-                                                                  ├─▶ LLM (OpenCode) ─▶ answer
-Grand Lyon API ──▶ function calling (get_station_availability, find_nearest_bikes) ─┘
-                                      │
-                    Logfire traces + metrics (charts in the Logfire UI)
+
+### Ingestion (dlt)
+
+```mermaid
+flowchart TB
+    subgraph SRC["Source — Cyclocity API"]
+        AUTH["POST /auth/environments/PRD/client_tokens<br/>code + key → access token"]
+        SEARCH["POST /contracts/lyon/faqs/search"]
+    end
+
+    FALLBACK[("data/faq/faq.json<br/>cached fallback")]
+
+    subgraph PIPE["dlt pipeline — velov_faq"]
+        RES["@dlt.resource faq<br/>primary_key=id, replace"]
+        CHK["chunk + clean<br/>topic + question + answer → content"]
+        ADAPTER["qdrant_adapter<br/>(embed='content')"]
+    end
+
+    EMBED["FastEmbed<br/>BAAI/bge-small-en-v1.5"]
+    QD[("<img src='https://cdn.simpleicons.org/qdrant' width='16'/> Qdrant<br/>collection velov_faq")]
+
+    AUTH --> SEARCH --> RES
+    SEARCH -. on failure .-> FALLBACK --> RES
+    RES --> CHK --> ADAPTER --> EMBED --> QD
 ```
+
+> Tech logos come from [Simple Icons](https://simpleicons.org); they may not render in
+> every markdown viewer, but the text labels stay readable.
 
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LOGFIRE_TOKEN
+cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LLM_MODEL + LOGFIRE_TOKEN
 docker compose up --build
 ```
 
@@ -52,29 +107,27 @@ curl -s localhost:8000/chat -H 'content-type: application/json' \
 
 ```bash
 uv sync                                       # install deps
-playwright install chromium                   # once, for the FAQ scraper
-uv run ingest-faq                             # dlt: scrape FAQ -> Qdrant
-uv run ingest-stations                        # dlt: stations -> DuckDB (optional snapshot)
+uv run ingest                                 # dlt: fetch FAQ -> chunk -> embed -> Qdrant
 uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 uv run demo                                   # sample queries against the app
 ```
 
-Other commands: `uv run ingest`, `uv run eval`, `uv run eval-retrieval`, `uv run eval-llm`.
+Other commands: `uv run eval`, `uv run eval-gen`, `uv run eval-retrieval`, `uv run eval-llm`.
 Lint/format: `uv run ruff check .` and `uv run ruff format .`.
 
 ## Ingestion (dlt)
 
-- `ingestion/faq_pipeline.py` — scrapes the FAQ (Playwright), chunks it and loads it
-  into Qdrant with dense embeddings via `qdrant_adapter(resource, embed="content")`
-  (FastEmbed model). Falls back to `data/faq/faq.json` if the live scrape fails.
-- `ingestion/stations_pipeline.py` — snapshots real-time stations into DuckDB.
+- `ingestion/faq_pipeline.py` — fetches the FAQ from the Cyclocity API (anonymous
+  client-token exchange), chunks it and loads it into Qdrant with dense embeddings via
+  `qdrant_adapter(resource, embed="content")` (FastEmbed model). Falls back to
+  `data/faq/faq.json` if the live fetch fails.
 
 Qdrant destination config lives in `.dlt/config.toml`; override with
 `DESTINATION__QDRANT__QD_LOCATION` / `DESTINATION__QDRANT__MODEL`.
 
 ## Retrieval & RAG
 
-- **Query rewriting** (`app/rag/llm.py`) — LLM expands the query.
+- **Query rewriting** (`app/rag/llm.py`) — a pydantic-ai agent expands the query.
 - **Hybrid search** (`app/rag/retriever.py`) — dense (FastEmbed, Qdrant) + sparse
   (BM25) fused with RRF; three modes evaluable separately.
 - **Re-ranking** — cross-encoder re-scores the fused top-K.
@@ -82,8 +135,10 @@ Qdrant destination config lives in `.dlt/config.toml`; override with
 ## Evaluation
 
 ```bash
+uv run eval-gen         # generate ground-truth questions from the FAQ
 uv run eval-retrieval   # hit rate / MRR (dense vs sparse vs hybrid)
 uv run eval-llm         # LLM-as-judge
+uv run eval             # run retrieval + LLM evals together
 ```
 
 ## Monitoring (Logfire)
