@@ -2,22 +2,24 @@
 
 from __future__ import annotations
 
-import json
 import time
 
+import logfire
 from fastapi import FastAPI
-from openai.types.chat import ChatCompletionMessageFunctionToolCall, ChatCompletionMessageParam
+from pydantic_ai import Agent
+from pydantic_ai.messages import ToolReturnPart
 
 from app.config import settings
 from app.monitoring import metrics
 
 from app.rag import retriever
-from app.rag.llm import get_client, rewrite_query
+from app.rag.llm import get_model, rewrite_query
 from app.schemas import ChatRequest, ChatResponse, FeedbackRequest, Source
-from app.tools.stations import TOOL_IMPL, TOOL_SCHEMAS
+from app.tools.stations import find_nearest_bikes, get_station_availability
 
 
 app = FastAPI(title="Velo'v Assistant")
+logfire.configure(token=settings.logfire_token)
 
 
 _RAG_SYSTEM = (
@@ -47,52 +49,32 @@ def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     sources = _retrieve_context(message)
     latency_retrieval = (time.perf_counter() - t0) * 1000
 
-    combined_system_prompt = f"""{_RAG_SYSTEM}
+    instructions = f"""{_RAG_SYSTEM}
         FAQ context:
         {_context_block(sources)}"""
 
-    messages: list[ChatCompletionMessageParam] = [
-        {"role": "system", "content": combined_system_prompt},
-        {"role": "user", "content": message},
-    ]
+    agent = Agent(  # type: ignore
+        get_model(),
+        instructions=instructions,
+        tools=[get_station_availability, find_nearest_bikes],
+    )
 
     t0 = time.perf_counter()
-    resp = get_client().chat.completions.create(
-        model=settings.llm_model,
-        messages=messages,
-        tools=TOOL_SCHEMAS,
-        tool_choice="auto",
-    )
-    first = resp.choices[0].message
-    tools_used: list[str] = []
-
-    while first.tool_calls:
-        for call in first.tool_calls:
-            if not isinstance(call, ChatCompletionMessageFunctionToolCall):
-                continue
-
-            fn_name = call.function.name
-            if not (fn := TOOL_IMPL.get(fn_name)):
-                continue
-            args = json.loads(call.function.arguments or "{}")
-            result = fn(**args)
-            tools_used.append(fn_name)
-            messages.append(
-                {"role": "tool", "tool_call_id": call.id, "content": json.dumps(result, ensure_ascii=False, default=str)}
-            )
-        resp = get_client().chat.completions.create(model=settings.llm_model, messages=messages, tools=TOOL_SCHEMAS)
-        first = resp.choices[0].message
-
+    result = agent.run_sync(message)
     latency_llm = (time.perf_counter() - t0) * 1000
-    usage = resp.usage
+
+    tools_used = [part.tool_name for msg in result.all_messages() for part in msg.parts if isinstance(part, ToolReturnPart)]
+    usage = result.usage()
 
     meta = {
         "latency_retrieval_ms": round(latency_retrieval, 2),
         "latency_llm_ms": round(latency_llm, 2),
         "latency_total_ms": round((time.perf_counter() - started) * 1000, 2),
-        **{k: getattr(usage, k, 0) for k in ("prompt_tokens", "completion_tokens", "total_tokens")},
+        "prompt_tokens": usage.input_tokens,
+        "completion_tokens": usage.output_tokens,
+        "total_tokens": usage.total_tokens,
     }
-    return first.content or "", "tool" if tools_used else "rag", sources, tools_used, meta
+    return result.output, "tool" if tools_used else "rag", sources, tools_used, meta
 
 
 @app.post("/chat", response_model=ChatResponse)

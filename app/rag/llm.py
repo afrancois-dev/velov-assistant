@@ -1,44 +1,38 @@
-"""LLM client (OpenCode Zen — OpenAI-compatible) and query rewriting."""
+"""LLM model (OpenCode Zen — OpenAI-compatible) and query rewriting via pydantic-ai."""
 
 from __future__ import annotations
 
-import json
 from functools import lru_cache
+from typing import cast
 
-from openai import OpenAI
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.openai import OpenAIProvider
 
 from app.config import settings
 
 
 @lru_cache(maxsize=1)
-def get_client() -> OpenAI:
-    return OpenAI(api_key=settings.openai_api_key, base_url=settings.openai_base_url)
+def get_model() -> OpenAIChatModel:
+    return OpenAIChatModel(
+        settings.llm_model,
+        provider=OpenAIProvider(base_url=settings.openai_base_url, api_key=settings.openai_api_key),
+    )
 
 
 _REWRITE_SYSTEM = (
     "You are a query-rewriting assistant for a bike-sharing FAQ search engine. "
     "Rewrite the user's question into 1 to 3 standalone retrieval queries that capture "
     "the user's intent, expand acronyms/terms and disambiguate. "
-    "Return a JSON array of strings only."
+    "Return only the list of rewritten queries."
 )
+
+_rewrite_agent = Agent(get_model(), instructions=_REWRITE_SYSTEM, output_type=list[str])
 
 
 def rewrite_query(query: str, n_variants: int = 3) -> list[str]:
     """Expand a raw user question into retrieval variants via the LLM."""
     if not settings.openai_api_key:
         return [query]
-    raw = (
-        get_client()
-        .chat.completions.create(
-            model=settings.llm_model,
-            messages=[{"role": "system", "content": _REWRITE_SYSTEM}, {"role": "user", "content": query}],
-            temperature=0.2,
-        )
-        .choices[0]
-        .message.content
-    ) or "[]"
-    try:
-        variants = [v for v in json.loads(raw) if isinstance(v, str) and v]
-    except json.JSONDecodeError:
-        variants = [query]
+    variants = [v for v in cast(list[str], _rewrite_agent.run_sync(query).output) if v]
     return variants[:n_variants] or [query]

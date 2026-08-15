@@ -5,12 +5,12 @@ from __future__ import annotations
 import json
 import time
 from pathlib import Path
+from typing import cast
 
 from pydantic import BaseModel, Field
-from tenacity import retry, stop_after_attempt, wait_exponential
+from pydantic_ai import Agent
 
-from app.config import settings
-from app.rag.llm import get_client
+from app.rag.llm import get_model
 
 faq_file = Path("data/faq/faq.json")
 ground_truth_file = Path("data/faq/ground_truth.json")
@@ -29,24 +29,13 @@ class Questions(BaseModel):
     questions: list[str] = Field(description="5 questions the user might ask")
 
 
-# retry used just in case the llm formatting fails, which happens sometimes
-@retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=2, max=60))
+_generate_agent = Agent(
+    get_model(), instructions=DATA_GEN_INSTRUCTIONS, output_type=Questions, model_settings={"temperature": 0.7}
+)
+
+
 def _generate(doc: dict) -> Questions:
-    content = (
-        get_client()
-        .chat.completions.create(
-            model=settings.llm_model,
-            messages=[
-                {"role": "system", "content": DATA_GEN_INSTRUCTIONS},
-                {"role": "user", "content": json.dumps(doc, ensure_ascii=False)},
-            ],
-            temperature=0.7,
-            response_format={"type": "json_object"},
-        )
-        .choices[0]
-        .message.content
-    )
-    return Questions.model_validate(json.loads(content or "{}"))
+    return cast(Questions, _generate_agent.run_sync(json.dumps(doc, ensure_ascii=False)).output)
 
 
 def generate_ground_truth(doc: dict) -> list[dict]:

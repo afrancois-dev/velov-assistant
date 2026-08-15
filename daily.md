@@ -17,3 +17,5 @@ uv run ty check
 - remove grafana and use pydantic logfire
 - update evaluation/
 - mettre dlt dans le diagramme
+- switch from openai lib to pydanticAi that is more clean
+- add logfire

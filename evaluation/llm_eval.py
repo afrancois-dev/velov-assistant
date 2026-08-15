@@ -10,14 +10,13 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 from pathlib import Path
-from typing import Literal
+from typing import Literal, cast
 
 from pydantic import BaseModel, Field
-from tenacity import retry, stop_after_attempt, wait_exponential
+from pydantic_ai import Agent
 
-from app.config import settings
 from app.main import _run_chat
-from app.rag.llm import get_client
+from app.rag.llm import get_model
 
 faq_file = Path("data/faq/faq.json")
 ground_truth_file = Path("data/faq/ground_truth.json")
@@ -59,6 +58,11 @@ class AnswerEvaluation(BaseModel):
     score: Literal["good", "bad"] = Field(description="'good' if the answer is correct and complete, 'bad' otherwise.")
 
 
+_judge_agent = Agent(
+    get_model(), instructions=JUDGE_INSTRUCTIONS, output_type=AnswerEvaluation, model_settings={"temperature": 0.0}
+)
+
+
 @lru_cache(maxsize=1)
 def _load() -> list[dict]:
     return json.loads(ground_truth_file.read_text())
@@ -69,26 +73,9 @@ def _faq() -> dict[str, str]:
     return {d["id"]: d["answer"] for d in json.loads(faq_file.read_text())}
 
 
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(min=1, max=8))
 def _judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
-    content = (
-        get_client()
-        .chat.completions.create(
-            model=settings.llm_model,
-            messages=[
-                {"role": "system", "content": JUDGE_INSTRUCTIONS},
-                {
-                    "role": "user",
-                    "content": JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm),
-                },
-            ],
-            temperature=0.0,
-            response_format={"type": "json_object"},
-        )
-        .choices[0]
-        .message.content
-    )
-    return AnswerEvaluation.model_validate(json.loads(content or "{}"))
+    prompt = JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm)
+    return cast(AnswerEvaluation, _judge_agent.run_sync(prompt).output)
 
 
 def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
