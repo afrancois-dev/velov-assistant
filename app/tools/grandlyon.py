@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import math
-from functools import lru_cache
 from typing import Any
 
 import httpx
@@ -29,7 +28,12 @@ _STATION_KEYS = (
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=8))
 def _get_json(url: str, params: dict[str, Any] | None = None) -> dict:
-    return httpx.Client(timeout=30.0, headers={"User-Agent": "velov-assistant/0.1"}).get(url, params=params).raise_for_status().json()
+    return (
+        httpx.Client(timeout=30.0, headers={"User-Agent": "velov-assistant/0.1"})
+        .get(url, params=params)
+        .raise_for_status()
+        .json()
+    )
 
 
 def get_stations() -> list[dict[str, Any]]:

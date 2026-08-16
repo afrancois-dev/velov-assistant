@@ -15,16 +15,15 @@
 - clean and updates pyproject
 
 ## 16/08/26
-- lors de la génération du ground_truth_dataste
+- lors de la génération du ground_truth_dataset
   - attention au biais de représentation uniforme
     - certains sujets méritent (10 questions -> complexes alors que d'autres triviales ne mérient que 1 ou 2). Donc le dataset n'est pas représentatif de la distribution réelle des questions
   - biais de l'instruction llm
     - force le llm à générer 5 questions donc potentiellement 2 très bonnes et 3 pas intéressantes
-    
+- création de la CI/CD
 
 
 TODO:
-- [ x ] utiliser un autre llm pour le judge
 - ajouter dans la CI/CD les étapes d'évaluation du modèle obligatoirement !
 - CI/CD
 - Ajouter un readme pour les correcteurs
