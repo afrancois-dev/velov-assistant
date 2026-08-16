@@ -676,7 +676,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.13.4" },
     { name = "pydantic-ai", specifier = ">=2.31.0" },
     { name = "pydbml", specifier = ">=1.2.0" },
-    { name = "qdrant-client", specifier = ">=1.11.0,<1.19" },
+    { name = "qdrant-client", specifier = ">=1.11.0,<2.0" },
     { name = "sentence-transformers", specifier = ">=3.0.0,<5" },
     { name = "tenacity", specifier = ">=8.0.0,<10" },
     { name = "tqdm", specifier = ">=4.66.0,<5" },

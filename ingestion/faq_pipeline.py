@@ -118,7 +118,7 @@ def faq_source(sink: list[dict[str, Any]] | None = None) -> Any:
                 {
                     "name": "faq",
                     "primary_key": "id",
-                    "write_disposition": "merge",
+                    "write_disposition": "replace",
                     "endpoint": {
                         "path": "contracts/lyon/faqs/search",
                         "method": "POST",
@@ -148,8 +148,40 @@ def _refresh_cache(entries: list[dict[str, Any]], path: Path) -> None:
     logger.info("refreshed FAQ fallback cache: %s (%d entries)", path, len(entries))
 
 
+def _ensure_qdrant_state_indexes() -> None:
+    """Create the keyword payload indexes dlt's Qdrant destination needs but does not create.
+
+    dlt filters its metadata collections on `pipeline_name`, `load_id`, `schema_name` and
+    `version_hash` (state/schema sync) but only creates `created_at`/`inserted_at` datetime
+    indexes. Qdrant Cloud requires a keyword index for filtered scroll/count, so create them
+    here. Idempotent; no-op if a collection does not exist yet (e.g. a brand-new destination).
+    """
+    location = os.environ.get("DESTINATION__QDRANT__QD_LOCATION", "http://localhost:6333")
+    if not location.startswith(("http://", "https://")):
+        return  # embedded qdrant (qd_path): indexes not required
+    try:
+        from qdrant_client import QdrantClient
+        from qdrant_client.http.models import PayloadSchemaType
+
+        client = QdrantClient(url=location, api_key=os.environ.get("DESTINATION__QDRANT__CREDENTIALS__API_KEY"))
+        indexes = (
+            ("velov__dlt_pipeline_state", "pipeline_name"),
+            ("velov__dlt_loads", "load_id"),
+            ("velov__dlt_version", "schema_name"),
+            ("velov__dlt_version", "version_hash"),
+        )
+        for collection, field in indexes:
+            try:
+                client.create_payload_index(collection_name=collection, field_name=field, field_schema=PayloadSchemaType.KEYWORD)
+            except Exception:
+                logger.debug("could not create `%s` index on %s (collection missing yet)", field, collection)
+    except Exception:
+        logger.debug("qdrant index bootstrap skipped", exc_info=True)
+
+
 def run() -> None:
     """Run the FAQ ingestion pipeline into Qdrant, with a cached-file fallback."""
+    _ensure_qdrant_state_indexes()
     pipeline = dlt.pipeline(pipeline_name="velov_faq", destination="qdrant", dataset_name="velov")
 
     sink: list[dict[str, Any]] = []
