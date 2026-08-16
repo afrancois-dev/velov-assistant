@@ -25,7 +25,6 @@
 
 TODO:
 - [ x ] utiliser un autre llm pour le judge
-- mutualiser ces function_call (get_station_availability + find_nearest_bikes) en un seul
 - ajouter dans la CI/CD les étapes d'évaluation du modèle obligatoirement !
 - CI/CD
 - Ajouter un readme pour les correcteurs

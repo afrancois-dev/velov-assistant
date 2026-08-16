@@ -114,6 +114,8 @@ uv run demo                                   # sample queries against the app
 
 Other commands: `uv run eval`, `uv run eval-gen`, `uv run eval-retrieval`, `uv run eval-llm`.
 Lint/format: `uv run ruff check .` and `uv run ruff format .`.
+Typing: `uv run ty check`
+Pre-commit (optional only if you want to dev on this project): `prek install --config .pre-commit.yaml`
 
 ## Ingestion (dlt)
 
