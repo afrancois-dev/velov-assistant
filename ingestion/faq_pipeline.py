@@ -118,7 +118,7 @@ def faq_source(sink: list[dict[str, Any]] | None = None) -> Any:
                 {
                     "name": "faq",
                     "primary_key": "id",
-                    "write_disposition": "replace",
+                    "write_disposition": "merge",
                     "endpoint": {
                         "path": "contracts/lyon/faqs/search",
                         "method": "POST",
