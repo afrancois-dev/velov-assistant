@@ -14,6 +14,14 @@
 - add logfire
 - clean and updates pyproject
 
+## 16/08/26
+- lors de la génération du ground_truth_dataste
+  - attention au biais de représentation uniforme
+    - certains sujets méritent (10 questions -> complexes alors que d'autres triviales ne mérient que 1 ou 2). Donc le dataset n'est pas représentatif de la distribution réelle des questions
+  - biais de l'instruction llm
+    - force le llm à générer 5 questions donc potentiellement 2 très bonnes et 3 pas intéressantes
+    
+
 
 TODO:
 - utiliser tqdm pour la progression de la génération du ground truth dataset synthétique

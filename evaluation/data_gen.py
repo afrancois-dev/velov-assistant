@@ -29,27 +29,23 @@ class Questions(BaseModel):
     questions: list[str] = Field(description="5 questions the user might ask")
 
 
-_generate_agent = Agent(
-    get_model(), instructions=DATA_GEN_INSTRUCTIONS, output_type=Questions, model_settings={"temperature": 0.7}
-)
-
-
-def _generate(doc: dict) -> Questions:
-    return cast(Questions, _generate_agent.run_sync(json.dumps(doc, ensure_ascii=False)).output)
+_gen_agent = Agent(get_model(), instructions=DATA_GEN_INSTRUCTIONS, output_type=Questions)
 
 
 def generate_ground_truth(doc: dict) -> list[dict]:
-    questions = _generate(doc).questions
-    return [{"question": q, "document": doc["id"]} for q in questions]
+    output = cast(Questions, _gen_agent.run_sync(json.dumps(doc, ensure_ascii=False)).output)
+    return [{"question": q, "document": doc["id"]} for q in output.questions]
 
 
 def main() -> None:
     faq = json.loads(faq_file.read_text())
     records: list[dict] = []
+
     for i, doc in enumerate(faq, 1):
         records.extend(generate_ground_truth(doc))
         print(f"[{i}/{len(faq)}] {doc['id']}")
-        time.sleep(1)
+        time.sleep(1)  # to avoid rate limit
+
     ground_truth_file.write_text(json.dumps(records, ensure_ascii=False, indent=2))
     print(f"wrote {len(records)} records to {ground_truth_file}")
 

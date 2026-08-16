@@ -3,10 +3,14 @@
 Inspired by the llm-zoomcamp A->Q->A' evaluation: the judge decides whether the AI
 answer is semantically equivalent to the original FAQ answer (good) or not (bad),
 and explains its verdict. See 04-evaluation/lessons/13-llm-as-judge.md.
+
+Generated answers are cached in data/eval/generated_answers.json so re-running the
+judge (or swapping the judge model/prompt) does not regenerate them.
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 from pathlib import Path
 from typing import Literal, cast
@@ -15,11 +19,13 @@ from pydantic import BaseModel, Field
 from pydantic_ai import Agent
 from tqdm import tqdm
 
+from app.config import settings
 from app.main import _run_chat
 from app.rag.llm import get_model
 
 faq_file = json.loads(Path("data/faq/faq.json").read_text())
 ground_truth_file = json.loads(Path("data/faq/ground_truth.json").read_text())
+answers_file = Path("data/eval/generated_answers.json")
 
 JUDGE_INSTRUCTIONS = """
 You are an expert evaluator. You will be given:
@@ -58,9 +64,7 @@ class AnswerEvaluation(BaseModel):
     score: Literal["good", "bad"] = Field(description="'good' if the answer is correct and complete, 'bad' otherwise.")
 
 
-_judge_agent = Agent(
-    get_model(), instructions=JUDGE_INSTRUCTIONS, output_type=AnswerEvaluation, model_settings={"temperature": 0.0}
-)
+_judge_agent = Agent(get_model(), instructions=JUDGE_INSTRUCTIONS, output_type=AnswerEvaluation)
 
 
 def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
@@ -70,23 +74,71 @@ def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
     )
 
 
+def _load_records() -> list[dict]:
+    if not answers_file.exists():
+        return []
+    return json.loads(answers_file.read_text())
+
+
+def _load_cache() -> dict[str, str]:
+    return {rec["question"]: rec["answer_llm"] for rec in _load_records()}
+
+
+def _save_cache(records: list[dict]) -> None:
+    answers_file.parent.mkdir(parents=True, exist_ok=True)
+    answers_file.write_text(json.dumps(records, ensure_ascii=False, indent=2))
+
+
 def _generate_answer(question: str) -> str:
     answer, *_ = _run_chat(question)
     return answer
 
 
-def _records() -> list[dict]:
+def _records(regenerate: bool = False, limit: int | None = None) -> list[dict]:
     faq = {d["id"]: d["answer"] for d in faq_file}
-    records = []
-    for item in tqdm(ground_truth_file, desc="Generating answers"):
-        records.append(
-            {"question": item["question"], "answer_orig": faq[item["document"]], "answer_llm": _generate_answer(item["question"])}
-        )
+    cached_records = [] if regenerate else _load_records()
+    cache = {rec["question"]: rec["answer_llm"] for rec in cached_records}
+    items = ground_truth_file if limit is None else ground_truth_file[:limit]
+    records: list[dict] = []
+    for item in tqdm(items, desc="Generating answers"):
+        question = item["question"]
+        answer_llm = cache.get(question)
+        if answer_llm is None:
+            answer_llm = _generate_answer(question)
+            cached_records.append(
+                {"question": question, "document": item["document"], "answer_llm": answer_llm, "model": settings.llm_model}
+            )
+            cache[question] = answer_llm
+            _save_cache(cached_records)
+        records.append({"question": question, "answer_orig": faq[item["document"]], "answer_llm": answer_llm})
+    return records
+
+
+def _judge_only_records(limit: int | None = None) -> list[dict]:
+    faq = {d["id"]: d["answer"] for d in faq_file}
+    cache = _load_cache()
+    items = ground_truth_file if limit is None else ground_truth_file[:limit]
+    records: list[dict] = []
+    missing = 0
+    for item in items:
+        answer_llm = cache.get(item["question"])
+        if answer_llm is None:
+            missing += 1
+            continue
+        records.append({"question": item["question"], "answer_orig": faq[item["document"]], "answer_llm": answer_llm})
+    if missing:
+        print(f"warning: {missing} questions have no cached answer, skipped (run without --judge-only to generate)")
     return records
 
 
 def main() -> None:
-    records = _records()
+    parser = argparse.ArgumentParser(description="LLM-as-a-judge evaluation")
+    parser.add_argument("--regenerate", action="store_true", help="Regenerate all answers, ignoring the cache")
+    parser.add_argument("--judge-only", action="store_true", help="Only judge cached answers, skip generation")
+    parser.add_argument("--limit", type=int, default=None, help="Only process the first N questions")
+    args = parser.parse_args()
+
+    records = _judge_only_records(limit=args.limit) if args.judge_only else _records(regenerate=args.regenerate, limit=args.limit)
     results = [judge(**r) for r in tqdm(records, desc="Judging")]
     good = sum(r.score == "good" for r in results)
     print(f"good: {good}/{len(records)} = {good / len(records):.2%}")

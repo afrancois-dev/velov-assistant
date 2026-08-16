@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from functools import lru_cache
 from typing import cast
 
 from pydantic_ai import Agent
@@ -12,7 +11,6 @@ from pydantic_ai.providers.openai import OpenAIProvider
 from app.config import settings
 
 
-@lru_cache(maxsize=1)
 def get_model() -> OpenAIChatModel:
     return OpenAIChatModel(
         settings.llm_model,

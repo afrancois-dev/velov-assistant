@@ -1,0 +1,62 @@
+[
+  {
+    "question": "Can I rent a bike just for the day without signing up for a subscription?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
+    "answer_llm": "Yes, absolutely! You don't need a Vélo'v account or subscription to use the service. You can buy a **\"Vélo'v 24 hours\"** occasional ticket, which gives you unlimited trips for 24 hours (with the first 30 minutes of each trip free).\n\nHere's how:\n\n1. Go to a Vélo'v station equipped with an electronic payment terminal (you can find these on the station map on the website or official app by applying the \"only e-money stations\" filter)\n2. Click **\"Buy a plan\"** on the home screen\n3. Choose the **\"Vélo'v 24 hours\"** option (€4)\n4. Indicate the number of tickets you want (up to 5) and choose a 6-digit secret code\n5. Pay with your VISA or MASTERCARD\n\nThe terminal will issue you an access ticket, which you simply swipe on the handlebars of any bike to unlock it. You can return the bike to any station in the network — just make sure it's properly locked (a green light and double beep confirm it's correctly attached).\n\nAlternatively, if you only need one trip, there's also a **\"Vélo'v 1 trip\"** ticket for €1.80.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "How do the 1-trip and 24-hour passes work if I don't have an account?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
+    "answer_llm": "You can use Vélo'v without creating an account by purchasing an occasional pass directly at a station. Here's how it works:\n\n## Where to buy\nOccasional passes are sold at Vélo'v stations equipped with an electronic payment terminal. To find them, check the station map on the website or the official Vélo'v mobile app and apply the filter **\"only e-money stations.\"**\n\n## How to purchase\n1. Go to a Vélo'v reception and subscription terminal with a payment terminal\n2. Tap **\"Buy a plan\"** on the home screen\n3. Choose your option:\n   - **Vélo'v 1 trip** – €1.80 for a single trip\n   - **Vélo'v 24 hours** – €4 for an unlimited number of trips over 24 hours\n4. Indicate the number of passes you want (up to 5) and choose a 6-digit secret code\n5. Insert your **VISA or MASTERCARD** and follow the instructions\n\n## Using your pass\nThe terminal will issue one access ticket per pass purchased. These temporary tickets give you access to the entire Vélo'v network — just **swipe your ticket on the handlebars** of any bike to unlock it.\n\n## Returning the bike\nYou can return the bike to **any station**. Make sure it's properly locked at an attachment point — a **green light and a double beep** will confirm it's correctly secured.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "Which stations actually let you buy a temporary pass with a bank card?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
+    "answer_llm": "According to the Vélo'v FAQ, you can buy a temporary pass (the \"Vélo'v 1 trip\" ticket at €1.80 or the \"Vélo'v 24 hours\" pass at €4) with a VISA or MASTERCARD at any **station equipped with an electronic payment terminal** (called \"e-money stations\").\n\nI don't have access to a specific list of which stations have these terminals — my real-time tools only show bike and stand availability, not payment terminal locations. To find them, the FAQ directs you to:\n\n- Consult the **station map on the Vélo'v website** or the **official Vélo'v mobile application**\n- Apply the filter **\"only e-money stations\"**\n\nOnce at a terminal, just click \"Buy a plan\" on the home screen, choose your option, pick a 6-digit secret code, and insert your card. The terminal will issue your access ticket(s), which you can use to unlock any bike on the network.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "What are the steps to get a ticket from the terminal using my credit card?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
+    "answer_llm": "Here are the steps to purchase a ticket from a Vélo'v terminal using your credit card:\n\n1. **Find a terminal** – Go to a Vélo'v reception and subscription terminal equipped with an electronic payment terminal. You can locate these by checking the station map on the website or the official Vélo'v mobile app and applying the \"only e-money stations\" filter.\n\n2. **Start the purchase** – Click on \"Buy a plan\" on the home screen.\n\n3. **Choose your formula**:\n   - \"Vélo'v 1 trip\" at **1.80 euros** for a single trip, or\n   - \"Vélo'v 24 hours\" at **4 euros** for unlimited trips over 24 hours.\n\n4. **Enter details** – Indicate the number of formulas desired (up to 5) and choose a 6-digit secret code.\n\n5. **Pay** – Insert your **VISA or MASTERCARD** and follow the on-screen instructions.\n\nThe terminal will then issue you one access ticket per purchased formula. With your ticket, you can unlock any bike on the network by swiping the ticket on the handlebars.\n\n**Note:** Only VISA and MASTERCARD are accepted. Also, you don't need to create a Vélo'v account for this option. When you're done riding, you can return the bike to any station—just make sure it's properly locked (a green light and double beep will confirm).",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "After buying a day pass, can I drop the bike off at any station in the network?",
+    "document": "faq-is-it-possible-to-access-to-the-service-without-a-v-lo-v-account",
+    "answer_llm": "Yes! According to the Vélo'v FAQ, once you have your ticket (including a 24-hour pass), you can access the entire Vélo'v network and **return your bike to any station**.\n\nJust make sure your bike is properly locked when you return it to an attachment point — a **green light and a double beep** will confirm it's correctly docked.\n\n**One helpful tip:** If the station is full when you arrive:\n1. Go to the \"need help\" section of the mobile app, or sign in at the terminal with your card or ticket\n2. Check the nearest stations with available spaces\n3. You'll get an **extra 15 minutes free of charge** to reach the nearest station with open docks",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "Do I absolutely need the official app to unlock a bike with my phone, or does the mobile website work too?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone",
+    "answer_llm": "I don't have information about that in my available resources. The FAQ context I have references the official Vélo'v mobile application for features like reporting faulty bikes, evaluating bikes, and inviting friends, but it doesn't specify whether the mobile website can be used to unlock bikes as an alternative to the app.\n\nWhat I can tell you from the available information:\n\n- **Without any account or app**: You can unlock bikes using temporary tickets purchased at stations with electronic payment terminals (Vélo'v 1 trip for €1.80 or Vélo'v 24 hours for €4). These tickets are swiped on the bike's handlebars to unlock it.\n\nFor a definitive answer about app vs. mobile website unlocking, I'd recommend checking the official Vélo'v website or contacting their customer service directly.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "What are the exact steps to create an account from scratch on the app?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone",
+    "answer_llm": "From the official Vélo’v app:\n\n1. Download the **Vélo’v Official** app (Android or iOS).\n2. Tap **SUBSCRIBE**.\n3. Enter your **email address** and choose a **6-digit secret code**.\n4. Open the validation email and tap the **validation link**.\n5. Follow the guided steps to choose a package and finish creating the account.\n\nNote: the service is only accessible to people who are at least **14 years old** on the day of subscription.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "If I buy a 24-hour pass on my phone, can I start riding right away without waiting for a physical card?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone",
+    "answer_llm": "Yes—if you have a Vélo’v account, the FAQ says you can buy the 24-hour formula in the mobile app/website and then release a bike; the app will ask you to select the valid formula to use. It doesn’t mention needing a physical card or waiting period.\n\nYou can also release a bike at a reception terminal with your subscription number and 6-digit secret code. If you don’t have an account, the FAQ describes buying at a station payment terminal, which issues access ticket(s).",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "I got a 'not eligible for this offer' error trying to sign up for the annual plan—what does that mean and how do I fix it?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone",
+    "answer_llm": "That error typically means one of two things:\n\n**1. You already have (or recently had) an annual subscription**\nIf you have an annual plan that's currently valid or expired less than 12 months ago, you can't take out a second annual subscription. Instead, you need to renew your existing one:\n- Go to the **\"My formulas\"** (My plans) section of your personal space on the Velo'v website or official app\n- Select your annual subscription and click **\"Subscribe\"** / **\"Resubscribe\"**\n\nTip: You can also enable free automatic renewal there, which you can deactivate anytime up to 3 days before expiry.\n\n**2. You don't meet the age requirement for the offer**\nThe service is only open to people aged **14 or older** on the day of subscription, and some offers have specific age ranges (e.g., the 14–25 youth plan is only available until the day before your 26th birthday). Eligibility is calculated from the date of birth entered when you created your account.\n\nIf you think your date of birth was entered incorrectly, you can contact customer service at **01 30 79 33 40** to request a correction.\n\nIf neither of these applies to you, I'd recommend calling the helpline above so they can look into your account directly.",
+    "model": "kimi-k3"
+  },
+  {
+    "question": "Can I link my annual subscription to my Técély card instead of carrying the Velo'v RFID card?",
+    "document": "faq-how-to-access-to-the-service-with-a-smartphone",
+    "answer_llm": "Yes, absolutely! According to the Vélo'v FAQ, you can link your annual subscription to your Técély card instead of using the Vélo'v card. Here's how:\n\n**At the time of subscription:** You are invited to choose the support for your subscription — if you have an annual plan, you can activate your Vélo'v subscription directly on your Técély card (OùRA or LPA cards are also supported).\n\n**If you're already subscribed:** You can associate your Vélo'v subscription to a partner card at any time:\n1. Go to the **\"My formulas\"** section of your personal space\n2. Click on the desired subscription\n3. Select **\"I change support\"**\n\n**To activate the card:** Visit one of the 348 Vélo'v stations with your Técély card and the 6-digit secret code you chose when you subscribed.\n\nThis way, you can travel light and use a single card for both your TCL transit network and Vélo'v bikes!",
+    "model": "kimi-k3"
+  }
+]

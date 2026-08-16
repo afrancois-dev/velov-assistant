@@ -30,8 +30,9 @@ def _dense_model():
     return TextEmbedding(model_name=settings.qdrant_embedding_model)
 
 
-def _vector_name(client: QdrantClient) -> str:
-    vectors = client.get_collection(settings.qdrant_collection).config.params.vectors
+@lru_cache(maxsize=1)
+def _vector_name() -> str:
+    vectors = get_qdrant_client().get_collection(settings.qdrant_collection).config.params.vectors
     return next(iter(vectors), "") if isinstance(vectors, dict) else ""
 
 
@@ -59,13 +60,14 @@ def search_dense(query: str, limit: int = 20) -> list[dict[str, Any]]:
         for p in client.query_points(
             collection_name=settings.qdrant_collection,
             query=_embed(query),
-            using=_vector_name(client),
+            using=_vector_name(),
             limit=limit,
             with_payload=True,
         ).points
     ]
 
 
+@lru_cache(maxsize=1)
 def _corpus() -> list[dict]:
     client = get_qdrant_client()
     docs, offset = [], None
@@ -78,16 +80,23 @@ def _corpus() -> list[dict]:
             return docs
 
 
-def _bm25_scores(query: str, k1: float = 1.5, b: float = 0.75) -> list[float]:
-    tokens = [_TOKEN_RE.findall((d.get(_TEXT_FIELD) or "").lower()) for d in _corpus()]
-    lengths = [len(t) for t in tokens]
+@lru_cache(maxsize=1)
+def _bm25_index() -> tuple[list[Counter], list[int], float, Counter]:
+    tfs = [Counter(_TOKEN_RE.findall((d.get(_TEXT_FIELD) or "").lower())) for d in _corpus()]
+    lengths = [sum(tf.values()) for tf in tfs]
     avgdl = sum(lengths) / len(lengths) if lengths else 1.0
-    df = Counter(term for doc in tokens for term in set(doc))
+    df = Counter(term for tf in tfs for term in tf)
+    return tfs, lengths, avgdl, df
+
+
+def _bm25_scores(query: str, k1: float = 1.5, b: float = 0.75) -> list[float]:
+    tfs, lengths, avgdl, df = _bm25_index()
+    n_docs = len(tfs)
     terms = _TOKEN_RE.findall(query.lower())
-    idf = {t: math.log(1 + (len(tokens) - df[t] + 0.5) / (df[t] + 0.5)) for t in terms if df[t]}
+    idf = {t: math.log(1 + (n_docs - df[t] + 0.5) / (df[t] + 0.5)) for t in terms if df[t]}
     return [
         sum(idf[t] * tf[t] * (k1 + 1) / (tf[t] + k1 * (1 - b + b * length / avgdl)) for t in terms if t in idf)
-        for tf, length in ((Counter(doc), length) for doc, length in zip(tokens, lengths))
+        for tf, length in zip(tfs, lengths)
     ]
 
 
@@ -127,9 +136,14 @@ class Reranker:
         return sorted(candidates, key=lambda c: c.get("rerank_score", 0.0), reverse=True)[:top_k]
 
 
+@lru_cache(maxsize=1)
+def _get_reranker() -> Reranker:
+    return Reranker()
+
+
 def retrieve(query: str, mode: str = "hybrid", top_k: int = 5, rerank: bool = True) -> list[dict[str, Any]]:
     """Retrieve top documents for a query. mode: "dense" | "sparse" | "hybrid"."""
     candidates = {"dense": search_dense, "sparse": search_sparse}.get(mode, hybrid)(query, limit=20)
     if rerank and candidates:
-        candidates = Reranker().rerank(query, candidates, top_k)
+        candidates = _get_reranker().rerank(query, candidates, top_k)
     return candidates[:top_k]

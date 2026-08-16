@@ -42,6 +42,15 @@ def _context_block(sources: list[Source]) -> str:
     return "\n\n".join(f"[{i}] Q: {s.question}\nA: {s.answer}" for i, s in enumerate(sources, 1))
 
 
+def _run_agent(message: str, instructions: str):
+    agent = Agent(  # type: ignore
+        get_model(),
+        instructions=instructions,
+        tools=[get_station_availability, find_nearest_bikes],
+    )
+    return agent.run_sync(message)
+
+
 def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
     started = time.perf_counter()
 
@@ -53,14 +62,8 @@ def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
         FAQ context:
         {_context_block(sources)}"""
 
-    agent = Agent(  # type: ignore
-        get_model(),
-        instructions=instructions,
-        tools=[get_station_availability, find_nearest_bikes],
-    )
-
     t0 = time.perf_counter()
-    result = agent.run_sync(message)
+    result = _run_agent(message, instructions)
     latency_llm = (time.perf_counter() - t0) * 1000
 
     tools_used = [part.tool_name for msg in result.all_messages() for part in msg.parts if isinstance(part, ToolReturnPart)]

@@ -148,8 +148,10 @@ flowchart TB
 - `retrieve(query, mode="hybrid")` returns top-k with scores + payload.
 
 ### 4.3 `app/rag/llm.py`
-- `get_model()` — `OpenAIChatModel` over `OpenAIProvider` pointing at the OpenCode Zen
-  endpoint (`https://opencode.ai/zen/v1/`).
+- `get_model()` — `OpenAIChatModel` over `OpenAIProvider`. Two OpenCode endpoints are
+  supported, selected via `OPENAI_BASE_URL`:
+  - **Zen (free, default)** — `https://opencode.ai/zen/v1/` with `deepseek-v4-flash-free`.
+  - **Go (subscription)** — `https://opencode.ai/zen/go/v1/` with a Go model (e.g. `kimi-k3`).
 - `rewrite_query(q)` — pydantic-ai agent returns 1–3 variants; retrieved per variant,
   merged and deduped.
 

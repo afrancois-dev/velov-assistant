@@ -10,18 +10,13 @@ from tqdm import tqdm
 
 from app.rag import retriever
 
-ground_truth_file = Path("data/faq/ground_truth.json")
-
-
-@lru_cache(maxsize=1)
-def _load() -> list[dict]:
-    return json.loads(ground_truth_file.read_text())
+ground_truth_file = json.loads(Path("data/faq/ground_truth.json").read_text())
 
 
 def _ranks(mode: str, top_k: int = 5) -> list[int | None]:
     """Return the rank of the target document for each item (None if not found)."""
     ranks: list[int | None] = []
-    for item in tqdm(_load(), desc=f"{mode:8s}"):
+    for item in tqdm(ground_truth_file, desc=f"{mode:8s}"):
         hits = [h["id"] for h in retriever.retrieve(item["question"], mode=mode, top_k=top_k, rerank=False)]
         ranks.append(next((r for r, hid in enumerate(hits, 1) if hid == item["document"]), None))
     return ranks
