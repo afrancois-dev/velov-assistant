@@ -6,7 +6,7 @@ repos:
         entry: uv --directory app run ruff format
         language: system
         types: [python]
-        files: ^app/.*\.py$
+        files: ^(app|evaluation|ingestion)/.*\.py$
         pass_filenames: false
         stages: [pre-commit]
 
@@ -15,7 +15,7 @@ repos:
         entry: uv --directory app run ruff check --fix
         language: system
         types: [python]
-        files: ^app/.*\.py$
+        files: ^(app|evaluation|ingestion)/.*\.py$
         pass_filenames: false
         stages: [pre-commit]
 
@@ -24,6 +24,6 @@ repos:
         entry: uv --directory app run ty
         language: system
         types: [python]
-        files: ^app/.*\.py$
+        files: ^(app|evaluation|ingestion)/.*\.py$
         pass_filenames: false
         stages: [pre-push]
