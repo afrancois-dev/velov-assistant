@@ -60,7 +60,7 @@ jobs:
         run: uv run ingest
         env:
           DESTINATION__QDRANT__QD_LOCATION: ${{ secrets.QDRANT_URL }}
-          DESTINATION__QDRANT__QD_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+          DESTINATION__QDRANT__CREDENTIALS__API_KEY: ${{ secrets.QDRANT_API_KEY }}
 
       - name: Run retrieval evaluation
         run: uv run eval-retrieval | tee retrieval-eval.txt
