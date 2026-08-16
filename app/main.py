@@ -15,7 +15,7 @@ from app.monitoring import metrics
 from app.rag import retriever
 from app.rag.llm import get_model, rewrite_query
 from app.schemas import ChatRequest, ChatResponse, FeedbackRequest, Source
-from app.tools.stations import find_nearest_bikes, get_station_availability
+from app.tools.stations import get_station_availability
 
 
 app = FastAPI(title="Velo'v Assistant")
@@ -46,7 +46,7 @@ def _run_agent(message: str, instructions: str):
     agent = Agent(  # type: ignore
         get_model(),
         instructions=instructions,
-        tools=[get_station_availability, find_nearest_bikes],
+        tools=[get_station_availability],
     )
     return agent.run_sync(message)
 

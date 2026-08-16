@@ -34,7 +34,7 @@ flowchart TB
         RETR["hybrid retriever<br/>dense + BM25 + RRF"]
         RERANK["cross-encoder rerank"]
         LLM["LLM (pydantic-ai<br/>-> OpenCode Zen)"]
-        TOOLS["function calling<br/>get_station_availability<br/>find_nearest_bikes(place)"]
+        TOOLS["function calling<br/>get_station_availability"]
     end
 
     subgraph Obs["Observability"]
@@ -76,8 +76,8 @@ flowchart TB
    (a `pydantic_ai.Agent` with the retrieval/FAQ system prompt and the station tools).
 
 ### 2.3 Tool path (real-time, no station DB)
-1. The LLM calls `get_station_availability(station_name_or_location)` or
-   `find_nearest_bikes(place)`; **the LLM never produces raw coordinates**.
+1. The LLM calls `get_station_availability(station_name_or_location)`; **the LLM
+   never produces raw coordinates**.
 2. Tools geocode the place with the **Grand Lyon Photon-based** geocoder
    (`download.data.grandlyon.com/geocoding/photon-bal/api`) and fetch the real-time
    `jcd_jcdecaux.jcdvelov` snapshot (name, `lat`/`lng`, `available_bikes`,
@@ -156,8 +156,9 @@ flowchart TB
   merged and deduped.
 
 ### 4.4 `app/tools/stations.py`
-- Tool schemas for `get_station_availability(station_name_or_location)` and
-  `find_nearest_bikes(place)` (place geocoded via Photon, no raw coords from the LLM).
+- Tool schema for `get_station_availability(station_name_or_location)` — matches a
+  station name/address, or geocodes a place (Photon) and returns the nearest stations
+  (no raw coords from the LLM).
 - `grandlyon.py` fetches `jcd_jcdecaux.jcdvelov/all.json?maxfeatures=-1` and geocodes
   via `download.data.grandlyon.com/geocoding/photon-bal/api`.
 

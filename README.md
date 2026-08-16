@@ -39,7 +39,7 @@ flowchart TB
     end
 
     subgraph TOOL["Tool path"]
-        TOOLS["function calling<br/>get_station_availability<br/>find_nearest_bikes"]
+        TOOLS["function calling<br/>get_station_availability"]
         GL["Grand Lyon API<br/>stations (httpx + tenacity)"]
         GEO["Photon geocoder"]
     end
