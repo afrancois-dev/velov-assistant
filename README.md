@@ -5,6 +5,8 @@ An AI assistant for Lyon's self-service bike network (Vélo'v) with:
 - **RAG** — answers about policies, pricing and rules from the official FAQ.
 - **Function calling** — real-time station availability and nearest-bike lookups.
 
+> 📋 **For reviewers** — the scoring grid is at the bottom of this file: [Evaluation grid](#evaluation-grid).
+
 ## Problem description
 
 Tourists and newcomers in Lyon need quick information about how Vélo'v works. That
@@ -74,8 +76,6 @@ flowchart TB
     RES --> CHK --> ADAPTER --> EMBED --> QD
 ```
 
-> Tech logos come from [Simple Icons](https://simpleicons.org); they may not render in
-> every markdown viewer, but the text labels stay readable.
 
 ## Quick start (Docker)
 
@@ -114,6 +114,7 @@ Pre-commit (optional only if you want to dev on this project): `prek install --c
   client-token exchange), chunks it and loads it into Qdrant with dense embeddings via
   `qdrant_adapter(resource, embed="content")` (FastEmbed model). Falls back to
   `data/faq/faq.json` if the live fetch fails.
+- The FAQ source is browsable at <https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ>.
 
 Qdrant destination config lives in `.dlt/config.toml`; override with
 `DESTINATION__QDRANT__QD_LOCATION` / `DESTINATION__QDRANT__MODEL`.
@@ -137,3 +138,26 @@ uv run eval             # run retrieval + LLM evals together
 ## Reproducibility
 
 All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
+
+---
+
+## Evaluation grid
+
+Evidence and pointers for the reviewer (no score assigned — arguments per criterion):
+
+| Criterion | Where to look / arguments |
+|---|---|
+| Problem description | `README.md` "Problem description" + `architecture.md` §1 — clear problem (Vélo'v FAQ + real-time availability for tourists/newcomers) with example questions. |
+| Retrieval flow | Knowledge base (Qdrant, `app/rag/retriever.py`) + LLM (pydantic-ai agent, `app/main.py::agent`). The `search_faq` tool does the retrieval; the LLM composes the answer. |
+| Retrieval evaluation | `evaluation/retrieval_eval.py` (`uv run eval-retrieval`) — compares dense / sparse / hybrid with hit rate @5 and MRR @5 on `data/faq/ground_truth.json`; the hybrid approach is used in production. |
+| LLM evaluation | `evaluation/llm_eval.py` (`uv run eval-llm`) — LLM-as-a-judge scores the generated answer against the ground-truth FAQ answer (`good`/`bad`). |
+| Interface | Web chat UI via `agent.to_web()` (`uv run chat`) **and** a FastAPI streaming API (`POST /chat` in the Vercel AI Data Stream protocol + `GET /health`, `APP_ENV=dev uv run chat`). |
+| Ingestion pipeline | `ingestion/faq_pipeline.py` — dlt pipeline (`qdrant_adapter(embed="content")`, `write_disposition="replace"`), anonymous client-token auth, cached fallback `data/faq/faq.json`. FAQ source: <https://velov.grandlyon.com/en/tutorial/groups?tab=FAQ>. |
+| Monitoring | Logfire tracing — `logfire.configure` in `app/main.py` + pydantic-ai OpenTelemetry instrumentation (spans, token usage, latency). No user-feedback collection. |
+| Containerization | Full `docker-compose.yml` (Qdrant + ingestion + app) plus a `Dockerfile`. |
+| Reproducibility | `README.md` run instructions; pinned deps in `pyproject.toml` + `uv.lock`; data via dlt ingestion (live) with cached `data/faq/faq.json` fallback. |
+| Best practices — hybrid search | `app/rag/retriever.py::hybrid` — dense (FastEmbed) + sparse (BM25) fused with RRF; evaluated in `eval-retrieval`. |
+| Best practices — re-ranking | `app/rag/retriever.py::Reranker` — cross-encoder re-ranking (sentence-transformers). |
+| Best practices — query rewriting | `app/rag/llm.py::rewrite_query` — rewrite sub-agent invoked by `app/main.py::search_faq` when the first retrieval is weak. |
+| Bonus — cloud deployment | Qdrant Cloud (managed vector DB) as the vector store (`QDRANT_URL` in `.env.dev`). A cloud deployment, though not a classic IaaS (GCP/AWS). |
+| Bonus — extra | Real-time function calling with external APIs — `app/tools/stations.py` (`geocode_place`, `stations_by_name`, `stations_nearby`, `get_station_availability`) backed by the Grand Lyon API + Photon geocoder (`app/tools/grandlyon.py`). Debug map: <https://velov.grandlyon.com/fr/mapping>. |
