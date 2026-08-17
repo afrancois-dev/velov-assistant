@@ -98,7 +98,10 @@ fastapi_app = _build_fastapi_app()
 
 app = fastapi_app if settings.app_env == "dev" else webchat_app
 
-logfire.instrument_fastapi(app)
+if isinstance(app, FastAPI):
+    logfire.instrument_fastapi(app)
+else:
+    logfire.instrument_starlette(app)
 
 
 def _run_chat(message: str) -> str:
