@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import time
 from typing import Any
 
 import httpx
@@ -26,22 +27,29 @@ _STATION_KEYS = (
 )
 
 
+_client = httpx.Client(timeout=30.0, headers={"User-Agent": "velov-assistant/0.1"})
+
+
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=8))
 def _get_json(url: str, params: dict[str, Any] | None = None) -> dict:
-    return (
-        httpx.Client(timeout=30.0, headers={"User-Agent": "velov-assistant/0.1"})
-        .get(url, params=params)
-        .raise_for_status()
-        .json()
-    )
+    return _client.get(url, params=params).raise_for_status().json()
+
+
+_STATIONS_TTL = 30.0
+_stations_cache: dict[str, Any] = {"ts": 0.0, "stations": []}
 
 
 def get_stations() -> list[dict[str, Any]]:
-    """Fetch the full real-time station snapshot (name, coords, availability)."""
+    """Fetch the real-time station snapshot, cached for a short TTL."""
+    now = time.monotonic()
+    if now - _stations_cache["ts"] < _STATIONS_TTL and _stations_cache["stations"]:
+        return _stations_cache["stations"]
     data = _get_json(settings.grandlyon_stations_url, params={"maxfeatures": -1})
-    return [
+    stations = [
         {**{k: row.get(k) for k in _STATION_KEYS}, "electrical_bikes": _electrical_bikes(row)} for row in data.get("values", [])
     ]
+    _stations_cache.update(ts=now, stations=stations)
+    return stations
 
 
 def _electrical_bikes(row: dict[str, Any]) -> int | None:
@@ -58,15 +66,16 @@ def _haversine(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
 
 def nearest_stations(lat: float, lng: float, n: int = 5) -> list[dict[str, Any]]:
     """Return the n nearest stations to a point, with distance in meters."""
-    stations = get_stations()
-    for s in stations:
-        s["distance_m"] = round(_haversine(lat, lng, s["lat"], s["lng"]) * 1000)
-    return sorted(stations, key=lambda s: s["distance_m"])[:n]
+    ranked = sorted(
+        ({**s, "distance_m": round(_haversine(lat, lng, s["lat"], s["lng"]) * 1000)} for s in get_stations()),
+        key=lambda s: s["distance_m"],
+    )
+    return ranked[:n]
 
 
 def geocode(place: str) -> tuple[float, float] | None:
     """Geocode a free-text place using the Grand Lyon Photon geocoder."""
-    data = _get_json("https://download.data.grandlyon.com/geocoding/photon-bal/api", params={"q": place, "limit": 1})
+    data = _get_json(settings.photon_geocode_url, params={"q": place, "limit": 1})
     if not (features := data.get("features")):
         return None
     lon, lat = features[0]["geometry"]["coordinates"]

@@ -90,8 +90,7 @@ def _save_cache(records: list[dict]) -> None:
 
 
 def _generate_answer(question: str) -> str:
-    answer, *_ = _run_chat(question)
-    return answer
+    return _run_chat(question)
 
 
 def _records(regenerate: bool = False, limit: int | None = None) -> list[dict]:

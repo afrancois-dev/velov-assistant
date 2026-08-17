@@ -28,35 +28,25 @@ directory structure and module-by-module plan.
 
 ```mermaid
 flowchart TB
-    U(["User"]) --> API["<img src='https://cdn.simpleicons.org/fastapi' width='16'/> FastAPI /chat"]
-    API --> AG["<img src='https://cdn.simpleicons.org/pydantic' width='16'/> pydantic-ai Agent<br/>(system prompt + tools)"]
-
-    subgraph RAG["RAG path"]
-        RW["query rewriting<br/>(pydantic-ai)"]
-        RET["hybrid retriever<br/>dense + BM25 + RRF"]
-        QD[("<img src='https://cdn.simpleicons.org/qdrant' width='16'/> Qdrant<br/>dense vectors")]
-        RR["<img src='https://cdn.simpleicons.org/huggingface' width='16'/> cross-encoder rerank<br/>(sentence-transformers)"]
-    end
+    U(["User"]) --> UI["pydantic-ai<br/>web chat UI"]
+    UI --> AG["<img src='https://cdn.simpleicons.org/pydantic' width='16'/> pydantic-ai Agent<br/>(system prompt + tools)"]
 
     subgraph TOOL["Tool path"]
-        TOOLS["function calling<br/>get_station_availability"]
+        FAQ["search_faq<br/>(hybrid dense + BM25 + rerank)"]
+        QD[("<img src='https://cdn.simpleicons.org/qdrant' width='16'/> Qdrant<br/>dense vectors")]
+        ST["station tools<br/>geocode_place · stations_by_name · stations_nearby<br/>get_station_availability"]
         GL["Grand Lyon API<br/>stations (httpx + tenacity)"]
         GEO["Photon geocoder"]
     end
 
-    AG --> RW --> RET
-    RET --> QD
-    RET --> RR
-    AG --> TOOLS --> GL
-    TOOLS --> GEO
+    AG --> FAQ --> QD
+    AG --> ST --> GL
+    ST --> GEO
 
     LLM["LLM<br/>(OpenCode Zen · deepseek)"]
-    RR --> LLM
+    QD --> LLM
     GL --> LLM
     LLM --> ANS(["answer"])
-
-    LF["Logfire<br/>traces + metrics"]
-    API -. traces / metrics .-> LF
 ```
 
 ### Ingestion (dlt)
@@ -90,26 +80,27 @@ flowchart TB
 ## Quick start (Docker)
 
 ```bash
-cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LLM_MODEL + LOGFIRE_TOKEN
+cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LLM_MODEL
 docker compose up --build
 ```
 
-Services: Qdrant (`:6333`), app (`:8000`).
-
-Then try:
-
-```bash
-curl -s localhost:8000/chat -H 'content-type: application/json' \
-  -d '{"message":"Is there a bike near Part-Dieu right now?"}'
-```
+Services: Qdrant (`:6333`), app (`:8000`). Open http://localhost:8000 for the web chat UI.
 
 ## Local development
 
 ```bash
 uv sync                                       # install deps
 uv run ingest                                 # dlt: fetch FAQ -> chunk -> embed -> Qdrant
-uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-uv run demo                                   # sample queries against the app
+uv run chat                                   # local: web chat UI + local Qdrant (APP_ENV=local)
+```
+
+Two serving modes (selected via `APP_ENV`):
+
+- **`local`** (default) — `agent.to_web()` web chat UI, Qdrant local (`http://localhost:6333`), config `.env`.
+- **`dev`** — FastAPI endpoint streaming UI events (Vercel AI Data Stream protocol), Qdrant distant, config `.env.dev`:
+
+```bash
+APP_ENV=dev uv run chat   # POST /chat (SSE) + GET /health on :8000
 ```
 
 Other commands: `uv run eval`, `uv run eval-gen`, `uv run eval-retrieval`, `uv run eval-llm`.
@@ -129,7 +120,7 @@ Qdrant destination config lives in `.dlt/config.toml`; override with
 
 ## Retrieval & RAG
 
-- **Query rewriting** (`app/rag/llm.py`) — a pydantic-ai agent expands the query.
+- **FAQ search tool** (`app/main.py::search_faq`) — the agent calls it to answer policy/pricing/rules questions.
 - **Hybrid search** (`app/rag/retriever.py`) — dense (FastEmbed, Qdrant) + sparse
   (BM25) fused with RRF; three modes evaluable separately.
 - **Re-ranking** — cross-encoder re-scores the fused top-K.
@@ -142,14 +133,6 @@ uv run eval-retrieval   # hit rate / MRR (dense vs sparse vs hybrid)
 uv run eval-llm         # LLM-as-judge
 uv run eval             # run retrieval + LLM evals together
 ```
-
-## Monitoring (Logfire)
-
-Tracing and metrics are sent to **Pydantic Logfire** (set `LOGFIRE_TOKEN`). The app
-emits spans for the chat handler, retriever, reranker and tool calls, plus metrics:
-requests, retrieval/LLM/total latency, token usage, error count and feedback (+1/-1).
-Charts for the 5 required panels (queries over time, latency breakdown, feedback
-distribution, vector-vs-tool ratio, error rate + tokens) are built in the Logfire UI.
 
 ## Reproducibility
 

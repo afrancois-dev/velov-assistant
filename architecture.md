@@ -27,28 +27,22 @@ flowchart TB
         QDRANT[("Qdrant<br/>dense vectors + payload")]
     end
 
-    subgraph App["Application (FastAPI)"]
-        API["/chat endpoint"]
-        ROUTER["intent router<br/>(RAG vs tool)"]
-        REWRITE["query rewriting (pydantic-ai)"]
-        RETR["hybrid retriever<br/>dense + BM25 + RRF"]
-        RERANK["cross-encoder rerank"]
+    subgraph App["Application (pydantic-ai)"]
+        UI["web chat UI<br/>(agent.to_web())"]
+        AGENT["pydantic-ai Agent<br/>system prompt + tools"]
+        FAQ_TOOL["search_faq<br/>hybrid dense + BM25 + rerank"]
+        STATIONS_TOOL["station tools<br/>geocode_place · stations_by_name<br/>stations_nearby · get_station_availability"]
         LLM["LLM (pydantic-ai<br/>-> OpenCode Zen)"]
-        TOOLS["function calling<br/>get_station_availability"]
-    end
-
-    subgraph Obs["Observability"]
-        LOGFIRE["Pydantic Logfire<br/>traces + metrics"]
     end
 
     FAQ --> FETCH --> CHUNK --> DLT --> QDRANT
 
-    API --> ROUTER
-    ROUTER --> REWRITE --> RET --> RERANK --> LLM
-    ROUTER --> TOOLS --> STATIONS
-    TOOLS --> GEO
-
-    API -.traces + metrics.-> LOGFIRE
+    UI --> AGENT
+    AGENT --> FAQ_TOOL --> QDRANT
+    AGENT --> STATIONS_TOOL --> STATIONS
+    STATIONS_TOOL --> GEO
+    QDRANT --> LLM
+    STATIONS --> LLM
 ```
 
 ## 2. Component workflow
@@ -64,19 +58,19 @@ flowchart TB
    - `qdrant_adapter(resource, embed="content")` marks the field to vectorize;
    - the destination generates **dense** embeddings via FastEmbed (`model` config).
 
-### 2.2 Query path (RAG)
-1. **Query rewriting** — a pydantic-ai agent expands the raw user question into 1–3
-   retrieval variants.
-2. **Retrieval** (three modes, evaluable):
+### 2.2 Query path (RAG as a tool)
+1. The agent decides, based on the question, whether to call `search_faq` (policy/pricing/rules)
+   or the station tools (real-time availability).
+2. `search_faq` runs hybrid retrieval (three modes, evaluable):
    - `dense` — vector search on the dlt-embedded dense vectors (Qdrant);
    - `sparse` — BM25 over the in-memory FAQ corpus;
    - `hybrid` — reciprocal-rank fusion (RRF) of dense + sparse.
 3. **Re-ranking** — a cross-encoder scores the fused top-K and reorders.
-4. **Generation** — top documents are injected into the prompt and answered by the LLM
-   (a `pydantic_ai.Agent` with the retrieval/FAQ system prompt and the station tools).
+4. **Generation** — tool results are returned to the LLM to compose a natural-language answer.
 
 ### 2.3 Tool path (real-time, no station DB)
-1. The LLM calls `get_station_availability(station_name_or_location)`; **the LLM
+1. The LLM calls the station tools (`stations_by_name`, `stations_nearby`, or the
+   `get_station_availability` facade); **the LLM
    never produces raw coordinates**.
 2. Tools geocode the place with the **Grand Lyon Photon-based** geocoder
    (`download.data.grandlyon.com/geocoding/photon-bal/api`) and fetch the real-time
@@ -84,10 +78,9 @@ flowchart TB
    `available_bike_stands`, `status`, `last_update`) — no stations stored locally.
 3. Results are returned to the LLM to compose a natural-language answer.
 
-### 2.4 Observability
-- `app/main.py` calls `logfire.configure()` at startup (token optional).
-- The app emits **metrics** (requests, latency, tokens, errors, feedback) directly to
-  Logfire; charts are built in the Logfire UI.
+### 2.4 Serving
+- `app/main.py` builds the agent and exposes it via `agent.to_web()` — a Starlette app
+  served by uvicorn (`uv run chat`).
 
 ---
 
@@ -106,25 +99,20 @@ flowchart TB
 │   └── architecture.md        # this document
 ├── ingestion/                 # dlt pipelines
 │   └── faq_pipeline.py        # FAQ (Cyclocity API) -> chunk -> embed -> Qdrant
-├── app/                       # FastAPI service
-│   ├── main.py                # /chat, /feedback, /health + logfire.configure()
+├── app/                       # pydantic-ai service
+│   ├── main.py                # agent + tools + agent.to_web() (web chat UI)
 │   ├── config.py              # pydantic-settings
-│   ├── schemas.py             # request/response models
 │   ├── rag/
 │   │   ├── retriever.py       # dense/sparse/hybrid + rerank
-│   │   └── llm.py             # pydantic-ai model (OpenCode Zen) + query rewriting
-│   ├── tools/
-│   │   ├── grandlyon.py       # Grand Lyon datapusher HTTP client + Photon geocoder
-│   │   └── stations.py        # function schemas + impl
-│   └── monitoring/
-│       └── metrics.py         # Logfire metrics
+│   │   └── llm.py             # pydantic-ai model (OpenCode Zen)
+│   └── tools/
+│       ├── grandlyon.py       # Grand Lyon datapusher HTTP client + Photon geocoder (cached)
+│       └── stations.py        # tool functions (geocode/by-name/nearby/facade)
 ├── evaluation/
 │   ├── data_gen.py            # ground-truth generation (eval-gen)
 │   ├── retrieval_eval.py      # hit rate / MRR (dense vs sparse vs hybrid)
 │   ├── llm_eval.py            # LLM-as-a-judge
 │   └── data/ground_truth.json # (legacy) sample eval set
-├── scripts/
-│   └── sample_query.py        # end-to-end demo
 └── data/faq/
     ├── faq.json               # cached FAQ (reproducible fallback)
     └── ground_truth.json      # sample eval set
@@ -152,39 +140,24 @@ flowchart TB
   supported, selected via `OPENAI_BASE_URL`:
   - **Zen (free, default)** — `https://opencode.ai/zen/v1/` with `deepseek-v4-flash-free`.
   - **Go (subscription)** — `https://opencode.ai/zen/go/v1/` with a Go model (e.g. `kimi-k3`).
-- `rewrite_query(q)` — pydantic-ai agent returns 1–3 variants; retrieved per variant,
-  merged and deduped.
 
 ### 4.4 `app/tools/stations.py`
-- Tool schema for `get_station_availability(station_name_or_location)` — matches a
-  station name/address, or geocodes a place (Photon) and returns the nearest stations
-  (no raw coords from the LLM).
-- `grandlyon.py` fetches `jcd_jcdecaux.jcdvelov/all.json?maxfeatures=-1` and geocodes
-  via `download.data.grandlyon.com/geocoding/photon-bal/api`.
+- Composable tool functions, all real-time and cached (TTL 30s on the station snapshot):
+  - `geocode_place(place)` — Photon geocode → `{place, lat, lng}`.
+  - `stations_by_name(name, limit)` — substring match on name/address/commune/pole.
+  - `stations_nearby(lat, lng, n)` — nearest stations with `distance_m`.
+  - `get_station_availability(name_or_location)` — facade: by name, else geocode + nearby.
+- `grandlyon.py` fetches `jcd_jcdecaux.jcdvelov/all.json?maxfeatures=-1` (cached) and
+  geocodes via `download.data.grandlyon.com/geocoding/photon-bal/api`.
 
-### 4.5 `app/monitoring/`
-- `metrics.py` — Logfire counters/histograms: requests, latency, tokens, errors, feedback.
-
-### 4.6 `evaluation/`
+### 4.5 `evaluation/`
 - `data_gen.py` — LLM-generated ground-truth questions (`uv run eval-gen`).
 - `retrieval_eval.py` — hit rate & MRR over `data/faq/ground_truth.json` for all 3 modes.
 - `llm_eval.py` — LLM-as-a-judge scoring.
 
 ---
 
-## 5. Monitoring (Logfire, ≥ 5 charts)
-
-| # | Panel | Logfire metric |
-|---|-------|----------------|
-| 1 | Total queries & requests over time | `velov.requests` |
-| 2 | Latency breakdown (retrieval vs LLM) | `velov.latency.retrieval_ms` / `velov.latency.llm_ms` |
-| 3 | User feedback distribution (up/down) | `velov.feedback{rating=up\|down}` |
-| 4 | Vector search vs function calling ratio | `velov.requests{intent=rag\|tool}` |
-| 5 | Error rate & token consumption | `velov.errors`, `velov.tokens` |
-
----
-
-## 6. Reproducibility
+## 5. Reproducibility
 
 - All package versions pinned in `pyproject.toml` (via `uv.lock`).
 - One-command start: `docker compose up --build`.

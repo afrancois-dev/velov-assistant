@@ -131,9 +131,8 @@ class Reranker:
 
     def rerank(self, query: str, candidates: list[dict[str, Any]], top_k: int) -> list[dict[str, Any]]:
         scores = self._model.predict([(query, c.get(_TEXT_FIELD) or "") for c in candidates])
-        for c, s in zip(candidates, scores):
-            c["rerank_score"] = float(s)
-        return sorted(candidates, key=lambda c: c.get("rerank_score", 0.0), reverse=True)[:top_k]
+        ranked = [{**c, "rerank_score": float(s)} for c, s in zip(candidates, scores)]
+        return sorted(ranked, key=lambda c: c["rerank_score"], reverse=True)[:top_k]
 
 
 @lru_cache(maxsize=1)

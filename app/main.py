@@ -1,102 +1,108 @@
-"""FastAPI application: /chat (RAG + function calling) and /feedback."""
+"""Velo'v assistant: pydantic-ai agent with two serving modes.
+
+- ``local`` (default): web chat UI via ``agent.to_web()``.
+- ``dev``: FastAPI endpoint streaming UI events (Vercel AI Data Stream protocol).
+"""
 
 from __future__ import annotations
 
-import time
+from typing import Annotated, Any
 
 import logfire
 from fastapi import FastAPI
+from pydantic import Field
 from pydantic_ai import Agent
-from pydantic_ai.messages import ToolReturnPart
+from pydantic_ai.ui.vercel_ai import VercelAIAdapter
+from starlette.requests import Request
+from starlette.responses import Response
 
 from app.config import settings
-from app.monitoring import metrics
-
 from app.rag import retriever
 from app.rag.llm import get_model, rewrite_query
-from app.schemas import ChatRequest, ChatResponse, FeedbackRequest, Source
-from app.tools.stations import get_station_availability
+from app.tools.stations import (
+    geocode_place,
+    get_station_availability,
+    stations_by_name,
+    stations_nearby,
+)
 
-
-app = FastAPI(title="Velo'v Assistant")
-logfire.configure(token=settings.logfire_token)
-
-
-_RAG_SYSTEM = (
+_SYSTEM = (
     "You are a helpful assistant for Velo'v, Lyon's bike-sharing service. "
-    "Answer policy/pricing/rules questions using ONLY the provided FAQ context. "
-    "For real-time station availability, call the available functions. "
-    "If neither the context nor the tools can answer, say you don't know."
+    "Answer policy/pricing/rules questions using the search_faq tool. "
+    "For real-time station availability (bikes/free stands, nearest station), use the station tools. "
+    "If neither the FAQ nor the station tools can answer, say you don't know."
 )
 
 
-def _retrieve_context(query: str) -> list[Source]:
-    hits: dict = {}
+def _is_weak(hits: list[dict[str, Any]]) -> bool:
+    return not hits or max((h.get("rerank_score", 0.0) for h in hits), default=0.0) < 0.0
+
+
+def _format(hits: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [
+        {"topic": h.get("topic"), "question": h.get("question"), "answer": h.get("answer"), "score": h.get("score")} for h in hits
+    ]
+
+
+def search_faq(
+    query: Annotated[str, Field(description="The user's question, phrased for FAQ retrieval.")],
+    top_k: Annotated[int, Field(description="Maximum number of FAQ entries to return.")] = 3,
+) -> list[dict[str, Any]]:
+    """Search the Velo'v FAQ (hybrid dense + BM25, reranked).
+
+    Runs a first hybrid retrieval; if the result is weak, a query-rewriting
+    sub-agent expands the question into variants which are re-retrieved and merged.
+    """
+    first = retriever.retrieve(query, mode="hybrid", top_k=top_k)
+    if not _is_weak(first):
+        return _format(first)
+
+    merged = {h["id"]: h for h in first}
     for variant in rewrite_query(query):
-        hits.update((h["id"], h) for h in retriever.retrieve(variant, mode="hybrid", top_k=5))
-    top = sorted(hits.values(), key=lambda h: h.get("score", 0.0), reverse=True)[:5]
-    return [Source(topic=s.get("topic"), question=s.get("question"), answer=s.get("answer"), score=s.get("score")) for s in top]
+        for h in retriever.retrieve(variant, mode="hybrid", top_k=top_k):
+            merged.setdefault(h["id"], h)
+    top = sorted(merged.values(), key=lambda h: h.get("rerank_score", 0.0), reverse=True)[:top_k]
+    return _format(top)
 
 
-def _context_block(sources: list[Source]) -> str:
-    return "\n\n".join(f"[{i}] Q: {s.question}\nA: {s.answer}" for i, s in enumerate(sources, 1))
+agent = Agent(  # type: ignore
+    get_model(),
+    instructions=_SYSTEM,
+    tools=[search_faq, geocode_place, stations_by_name, stations_nearby, get_station_availability],
+)
+
+logfire.configure(token=settings.logfire_token)
+
+# Local: web chat UI.
+webchat_app = agent.to_web()
 
 
-def _run_agent(message: str, instructions: str):
-    agent = Agent(  # type: ignore
-        get_model(),
-        instructions=instructions,
-        tools=[get_station_availability],
-    )
-    return agent.run_sync(message)
+def _build_fastapi_app() -> FastAPI:
+    app = FastAPI(title="Velo'v Assistant")
+
+    @app.post("/chat")
+    async def chat(request: Request) -> Response:
+        return await VercelAIAdapter.dispatch_request(request, agent=agent)
+
+    @app.get("/health")
+    def health() -> dict:
+        return {"status": "ok"}
+
+    return app
 
 
-def _run_chat(message: str) -> tuple[str, str, list[Source], list[str], dict]:
-    started = time.perf_counter()
+# Dev: FastAPI + UI event stream (Vercel AI Data Stream protocol).
+fastapi_app = _build_fastapi_app()
 
-    t0 = time.perf_counter()
-    sources = _retrieve_context(message)
-    latency_retrieval = (time.perf_counter() - t0) * 1000
-
-    instructions = f"""{_RAG_SYSTEM}
-        FAQ context:
-        {_context_block(sources)}"""
-
-    t0 = time.perf_counter()
-    result = _run_agent(message, instructions)
-    latency_llm = (time.perf_counter() - t0) * 1000
-
-    tools_used = [part.tool_name for msg in result.all_messages() for part in msg.parts if isinstance(part, ToolReturnPart)]
-    usage = result.usage
-
-    meta = {
-        "latency_retrieval_ms": round(latency_retrieval, 2),
-        "latency_llm_ms": round(latency_llm, 2),
-        "latency_total_ms": round((time.perf_counter() - started) * 1000, 2),
-        "prompt_tokens": usage.input_tokens,
-        "completion_tokens": usage.output_tokens,
-        "total_tokens": usage.total_tokens,
-    }
-    return result.output, "tool" if tools_used else "rag", sources, tools_used, meta
+app = fastapi_app if settings.app_env == "dev" else webchat_app
 
 
-@app.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest) -> ChatResponse:
-    try:
-        answer, intent, sources, tools_used, meta = _run_chat(req.message)
-    except Exception:
-        metrics.record_error()
-        raise
-    metrics.record_request(intent=intent, retrieval_mode="hybrid", **meta)
-    return ChatResponse(answer=answer, intent=intent, sources=sources, tools_used=tools_used)
+def _run_chat(message: str) -> str:
+    """Run the agent once and return its answer."""
+    return agent.run_sync(message).output
 
 
-@app.post("/feedback")
-def feedback(req: FeedbackRequest) -> dict:
-    metrics.record_feedback(rating=req.rating, conversation_id=req.conversation_id, comment=req.comment)
-    return {"status": "ok"}
+def main() -> None:
+    import uvicorn
 
-
-@app.get("/health")
-def health() -> dict:
-    return {"status": "ok"}
+    uvicorn.run(app, host="0.0.0.0", port=8000)
