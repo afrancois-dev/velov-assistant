@@ -87,7 +87,7 @@ docker compose up --build
 ```
 
 Services: 
-- Qdrant (`:6333`)
+- qdrant (`:6333`) (knowledge db)
 - app (`:8000`). Open http://localhost:8000 for the web chat UI.
 
 
@@ -142,10 +142,6 @@ uv run eval             # run retrieval + LLM evals together
 ```
 
 NB: Executed by CI/CD e.g https://github.com/afrancois-dev/velov-assistant/actions/runs/32058331982
-
-## Reproducibility
-
-All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
 
 ---
 
