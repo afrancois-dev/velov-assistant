@@ -14,7 +14,7 @@ information lives in the FAQ on the Vélo'v website, which is tedious to browse.
 assistant answers FAQ questions and checks real-time bike availability, e.g.:
 
 - "Which is the nearest station with bikes available near Part-Dieu?"
-- "Can I book several bikes with one card?"
+- "Can I book several bikes with one account?"
 
 ## Project layout
 
@@ -143,11 +143,14 @@ All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
 
 ---
 
-## Tests
-
-### function_call
+## Tests (on local env with pydantic web chat)
 
 ### rag
+
+### function_call
+<img width="1217" height="912" alt="Screenshot From 2026-08-17 21-09-21" src="https://github.com/user-attachments/assets/969dad73-7123-437e-8a15-6a11013a93db" />
+
+
 
 
 
