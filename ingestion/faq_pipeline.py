@@ -7,9 +7,8 @@ a public code/key pair (shipped in the SPA bundle) is posted to
 authorizes a `POST /contracts/lyon/faqs/search`. Each Q/A pair is flattened into one
 self-contained chunk, then embedded by the Qdrant destination (`qdrant_adapter(embed="content")`).
 
-The client key is a public constant with an env override (`SOURCES__VELOV_FAQ__CLIENT_KEY`,
-optionally set in `.env` via `load_dotenv`); everything else is hardcoded (public, shipped in the
-SPA bundle). On failure (offline, changed API) the cached `data/faq/faq.json` is used as a
+The client code/key pair is a public constant (shipped in the SPA bundle), hardcoded below.
+On failure (offline, changed API) the cached `data/faq/faq.json` is used as a
 reproducible fallback, and refreshed after every successful live fetch.
 """
 
@@ -26,10 +25,7 @@ import dlt
 from dlt.destinations.adapters import qdrant_adapter
 from dlt.sources.helpers.rest_client.auth import AuthConfigBase
 from dlt.sources.rest_api import rest_api_resources
-from dotenv import load_dotenv
 from requests import PreparedRequest
-
-load_dotenv()
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +37,7 @@ BASE_URL = "https://api.cyclocity.fr"
 TOKEN_URL = "https://api.cyclocity.fr/auth/environments/PRD/client_tokens"
 CLIENT_CODE = "vls.web.lyon:PRD"
 LANGUAGE = "en"
-# public client key (not a secret). override via SOURCES__VELOV_FAQ__CLIENT_KEY (e.g. .env).
+# public client key (not a secret, shipped in the velov.grandlyon.com SPA bundle).
 CLIENT_KEY = "c3d9f5c22a9157a7cc7fe0e38269573bdd2f13ec48f867360ecdcbd35b196f87"
 # resolved against the repo root so the pipeline works from any cwd.
 FALLBACK_FILE = Path(__file__).resolve().parent.parent / "data" / "faq" / "faq.json"

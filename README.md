@@ -135,11 +135,21 @@ uv run eval-llm         # LLM-as-judge
 uv run eval             # run retrieval + LLM evals together
 ```
 
+NB: Executed by CI/CD e.g https://github.com/afrancois-dev/velov-assistant/actions/runs/32058331982
+
 ## Reproducibility
 
 All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
 
 ---
+
+## Tests
+
+### function_call
+
+### rag
+
+
 
 ## Evaluation grid
 
@@ -147,7 +157,7 @@ Evidence and pointers for the reviewer (no score assigned — arguments per crit
 
 | Criterion | Where to look / arguments |
 |---|---|
-| Problem description | `README.md` "Problem description" + `architecture.md` §1 — clear problem (Vélo'v FAQ + real-time availability for tourists/newcomers) with example questions. |
+| Problem description | `README.md` "Problem description" + `architecture.md` First paragraph : (Vélo'v FAQ + real-time availability for tourists/newcomers) with example questions. |
 | Retrieval flow | Knowledge base (Qdrant, `app/rag/retriever.py`) + LLM (pydantic-ai agent, `app/main.py::agent`). The `search_faq` tool does the retrieval; the LLM composes the answer. |
 | Retrieval evaluation | `evaluation/retrieval_eval.py` (`uv run eval-retrieval`) — compares dense / sparse / hybrid with hit rate @5 and MRR @5 on `data/faq/ground_truth.json`; the hybrid approach is used in production. |
 | LLM evaluation | `evaluation/llm_eval.py` (`uv run eval-llm`) — LLM-as-a-judge scores the generated answer against the ground-truth FAQ answer (`good`/`bad`). |
