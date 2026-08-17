@@ -159,6 +159,11 @@ All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
 <img width="1217" height="912" alt="Screenshot From 2026-08-17 21-09-21" src="https://github.com/user-attachments/assets/969dad73-7123-437e-8a15-6a11013a93db" />
 
 
+## Monitoring dashboards (pydantic logfire)
+<img width="1857" height="919" alt="Screenshot From 2026-08-17 22-27-22" src="https://github.com/user-attachments/assets/33ee1114-8478-4754-ac52-4c86678827f4" />
+
+<img width="1861" height="376" alt="Screenshot From 2026-08-17 22-27-44" src="https://github.com/user-attachments/assets/2c120206-47a5-4266-a8a8-3cf91e3ab7f7" />
+
 
 
 
