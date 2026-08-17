@@ -26,7 +26,7 @@ dependencies = [
     "pydantic>=2.13.4",
     "pydantic-ai-slim[web,openai]>=2.31.0",
     "fastapi>=0.115.0,<1",
-    "logfire[system-metrics]>=4.40.0",
+    "logfire[system-metrics,fastapi]>=4.40.0",
 ]
 
 [project.scripts]

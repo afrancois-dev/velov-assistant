@@ -84,8 +84,9 @@ cp .env.example .env          # fill in OPENAI_API_KEY (OpenCode Zen) + LLM_MODE
 docker compose up --build
 ```
 
-Services: Qdrant (`:6333`), app (`:8000`). Open http://localhost:8000 for the web chat UI.
-<img width="900" height="500" alt="Screenshot From 2026-08-17 21-28-13" src="https://github.com/user-attachments/assets/7b0c97f6-a524-4827-b369-da22ff0548ee" />
+Services: 
+- Qdrant (`:6333`)
+- app (`:8000`). Open http://localhost:8000 for the web chat UI.
 
 
 ## Local development
@@ -120,6 +121,7 @@ Pre-commit (optional only if you want to dev on this project): `prek install --c
 
 Qdrant destination config lives in `.dlt/config.toml`; override with
 `DESTINATION__QDRANT__QD_LOCATION` / `DESTINATION__QDRANT__MODEL`.
+<img width="900" height="500" alt="Screenshot From 2026-08-17 21-28-13" src="https://github.com/user-attachments/assets/7b0c97f6-a524-4827-b369-da22ff0548ee" />
 
 ## Retrieval & RAG
 
@@ -148,6 +150,7 @@ All dependency versions are pinned in `pyproject.toml` (locked via `uv.lock`).
 ## Tests (on local env with pydantic web chat)
 
 ### rag
+<img width="664" height="956" alt="Screenshot From 2026-08-17 21-53-25" src="https://github.com/user-attachments/assets/ca74e939-1a5e-454a-a61d-66848dc296c1" />
 
 
 ### function_call

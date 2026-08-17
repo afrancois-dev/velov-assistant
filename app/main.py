@@ -71,7 +71,9 @@ agent = Agent(  # type: ignore
     tools=[search_faq, geocode_place, stations_by_name, stations_nearby, get_station_availability],
 )
 
-logfire.configure(token=settings.logfire_token)
+logfire.configure(token=settings.logfire_token, service_name="velov-assistant")
+logfire.instrument_system_metrics()
+logfire.instrument_pydantic_ai()
 
 # Local: web chat UI.
 webchat_app = agent.to_web()
@@ -95,6 +97,8 @@ def _build_fastapi_app() -> FastAPI:
 fastapi_app = _build_fastapi_app()
 
 app = fastapi_app if settings.app_env == "dev" else webchat_app
+
+logfire.instrument_fastapi(app)
 
 
 def _run_chat(message: str) -> str:

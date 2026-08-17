@@ -4,16 +4,11 @@ from __future__ import annotations
 
 from typing import cast
 
-import logfire
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
 from app.config import settings
-
-
-logfire.configure()
-logfire.instrument_system_metrics()
 
 
 def get_model() -> OpenAIChatModel:
