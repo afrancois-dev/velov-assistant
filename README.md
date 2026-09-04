@@ -1,6 +1,4 @@
 # velov-assistant
-<img width="800" height="450" alt="Gemini_Generated_Image_ybbwnyybbwnyybbw" src="https://github.com/user-attachments/assets/11b0cd9c-607a-4de1-a834-78e9c77df322" />
-
 
 An AI assistant for Lyon's self-service bike network (Vélo'v) with:
 
