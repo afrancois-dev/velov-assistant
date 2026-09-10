@@ -3,7 +3,7 @@
 An AI assistant for Lyon's self-service bike network (Vélo'v) with:
 
 - **RAG** — answers about policies, pricing and rules from the official FAQ.
-- **Function calling** — real-time station availability and nearest-bike lookups.
+- **Function calling** — one `get_velov_info` facade for real-time station availability and nearby lookups.
 
 > 📋 **For reviewers** — the scoring grid is at the bottom of this file: [Evaluation grid](#evaluation-grid).
 
@@ -36,7 +36,7 @@ flowchart TB
     subgraph TOOL["Tool path"]
         FAQ["search_faq<br/>(hybrid dense + BM25 + rerank)"]
         QD[("<img src='https://cdn.simpleicons.org/qdrant' width='16'/> Qdrant<br/>dense vectors")]
-        ST["station tools<br/>geocode_place · stations_by_name · stations_nearby<br/>get_station_availability"]
+        ST["get_velov_info tool"]
         GL["Grand Lyon API<br/>stations (httpx + tenacity)"]
         GEO["Photon geocoder"]
     end
@@ -180,4 +180,4 @@ Evidence and pointers for the reviewer (no score assigned — arguments per crit
 | Best practices — re-ranking | `app/rag/retriever.py::Reranker` — cross-encoder re-ranking (sentence-transformers). |
 | Best practices — query rewriting | `app/rag/llm.py::rewrite_query` — rewrite sub-agent invoked by `app/main.py::search_faq` when the first retrieval is weak. |
 | Bonus — cloud deployment | Qdrant Cloud (managed vector DB) as the vector store (`QDRANT_URL` in `.env.dev`). A cloud deployment, though not a classic IaaS (GCP/AWS). |
-| Bonus — extra | Real-time function calling with external APIs — `app/tools/stations.py` (`geocode_place`, `stations_by_name`, `stations_nearby`, `get_station_availability`) backed by the Grand Lyon API + Photon geocoder (`app/tools/grandlyon.py`). Debug map: <https://velov.grandlyon.com/fr/mapping>. |
+| Bonus — extra | Real-time function calling with an external API — `app/tools/stations.py::get_velov_info` backed by the Grand Lyon API + Photon geocoder (`app/tools/grandlyon.py`). Debug map: <https://velov.grandlyon.com/fr/mapping>. |

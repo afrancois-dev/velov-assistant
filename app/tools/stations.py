@@ -1,8 +1,8 @@
-"""Function-calling tools for real-time Velo'v station data."""
+"""The single function-calling facade for real-time velo'v data."""
 
 from __future__ import annotations
 
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
@@ -32,47 +32,70 @@ def _pick(station: dict[str, Any]) -> dict[str, Any]:
     return out
 
 
-def geocode_place(
-    place: Annotated[str, Field(description="A place, address or landmark in Lyon (e.g. 'Part-Dieu').")],
+def _matches_filters(station: dict[str, Any], need_bikes: bool, need_free_stands: bool) -> bool:
+    return (not need_bikes or (station.get("available_bikes") or 0) > 0) and (
+        not need_free_stands or (station.get("available_bike_stands") or 0) > 0
+    )
+
+
+def _sort_key(station: dict[str, Any], sort_by: str) -> float:
+    values = {
+        "distance": station.get("distance_m"),
+        "bikes": station.get("available_bikes"),
+        "free_stands": station.get("available_bike_stands"),
+    }
+    return values[sort_by] if values[sort_by] is not None else float("inf")
+
+
+def get_velov_info(
+    location: Annotated[str, Field(description="A Velo'v station name, address or landmark in Lyon (e.g. 'Part-Dieu').")],
+    radius_m: Annotated[int, Field(description="Search radius in meters.", ge=100, le=5000)] = 1000,
+    limit: Annotated[int, Field(description="Maximum number of stations to return.", ge=1, le=20)] = 5,
+    need_bikes: Annotated[bool, Field(description="Only return stations with available bikes.")] = False,
+    need_free_stands: Annotated[bool, Field(description="Only return stations with free stands.")] = False,
+    sort_by: Annotated[
+        Literal["distance", "bikes", "free_stands"],
+        Field(description="Sort by distance, available bikes, or free stands."),
+    ] = "distance",
 ) -> dict[str, Any]:
-    """Geocode a free-text place into lat/lng coordinates via the Grand Lyon Photon geocoder."""
-    coords = grandlyon.geocode(place)
-    if not coords:
-        return {"place": place, "error": f"Could not locate '{place}'"}
-    return {"place": place, "lat": coords[0], "lng": coords[1]}
+    """Return live station availability by name or around a place.
 
-
-def stations_by_name(
-    name: Annotated[str, Field(description="A station name, address, commune or pole to match (substring).")],
-    limit: Annotated[int, Field(description="Maximum number of stations to return.")] = 5,
-) -> list[dict[str, Any]]:
-    """Find Velo'v stations whose name/address/commune/pole matches a substring, with real-time availability."""
-    q = name.lower()
+    Matching and geocoding happen here so the model never handles raw
+    coordinates or has to choose between several station tools.
+    """
+    query = location.strip()
+    if not query:
+        return {"query": location, "error": "A location is required", "stations": []}
+    stations = grandlyon.get_stations()
+    query_lower = query.lower()
     matches = [
-        s for s in grandlyon.get_stations() if any(q in (s.get(k) or "").lower() for k in ("name", "address", "commune", "pole"))
+        station
+        for station in stations
+        if any(query_lower in (station.get(field) or "").lower() for field in ("name", "address", "commune", "pole"))
     ]
-    return [_pick(s) for s in matches[:limit]]
 
+    response: dict[str, Any] = {
+        "query": query,
+        "search": "station_match" if matches else "nearby",
+        "radius_m": radius_m,
+        "stations": [],
+    }
 
-def stations_nearby(
-    lat: Annotated[float, Field(description="Latitude of the point.")],
-    lng: Annotated[float, Field(description="Longitude of the point.")],
-    n: Annotated[int, Field(description="Maximum number of stations to return.")] = 5,
-) -> list[dict[str, Any]]:
-    """Return the n nearest Velo'v stations to a point, with distance in meters and real-time availability."""
-    return [_pick(s) for s in grandlyon.nearest_stations(lat, lng, n=n)]
+    if matches:
+        candidates = matches
+    else:
+        coords = grandlyon.geocode(query)
+        if not coords:
+            response["error"] = f"Could not locate '{query}'"
+            return response
+        response["location"] = {"lat": coords[0], "lng": coords[1]}
+        candidates = [
+            station
+            for station in grandlyon.nearest_stations(*coords, n=len(stations))
+            if station.get("distance_m", float("inf")) <= radius_m
+        ]
 
-
-def get_station_availability(
-    station_name_or_location: Annotated[
-        str, Field(description="A station name, address, or a place/landmark in Lyon (e.g. 'Part-Dieu').")
-    ],
-) -> dict[str, Any]:
-    """Get real-time availability (bikes and free stands) for Velo'v stations. Accepts either a station name/address, or a place/landmark in Lyon — in which case it returns the nearest stations."""
-    by_name = stations_by_name(station_name_or_location, limit=10)
-    if by_name:
-        return {"query": station_name_or_location, "stations": by_name}
-    coords = grandlyon.geocode(station_name_or_location)
-    if not coords:
-        return {"query": station_name_or_location, "error": f"Could not locate '{station_name_or_location}'"}
-    return {"query": station_name_or_location, "stations": stations_nearby(*coords, n=5)}
+    candidates = [station for station in candidates if _matches_filters(station, need_bikes, need_free_stands)]
+    candidates.sort(key=lambda station: _sort_key(station, sort_by), reverse=sort_by in {"bikes", "free_stands"})
+    response["stations"] = [_pick(station) for station in candidates[:limit]]
+    return response

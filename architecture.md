@@ -3,7 +3,7 @@
 End-to-end LLM-powered assistant for the Lyon Vélo'v bike-sharing network:
 
 1. **RAG** — answers policy / pricing / rules questions from the official FAQ.
-2. **Function calling** — real-time station availability & nearest-bike lookups.
+2. **Function calling** — one `get_velov_info` facade for real-time station availability & nearby lookups.
 
 ---
 
@@ -31,7 +31,7 @@ flowchart TB
         UI["web chat UI<br/>(agent.to_web())"]
         AGENT["pydantic-ai Agent<br/>system prompt + tools"]
         FAQ_TOOL["search_faq<br/>hybrid dense + BM25 + rerank"]
-        STATIONS_TOOL["station tools<br/>geocode_place · stations_by_name<br/>stations_nearby · get_station_availability"]
+        STATIONS_TOOL["get_velov_info tool"]
         LLM["LLM (pydantic-ai<br/>-> OpenCode Zen)"]
     end
 
@@ -60,7 +60,7 @@ flowchart TB
 
 ### 2.2 Query path (RAG as a tool)
 1. The agent decides, based on the question, whether to call `search_faq` (policy/pricing/rules)
-   or the station tools (real-time availability).
+   or `get_velov_info` (real-time availability).
 2. `search_faq` runs hybrid retrieval (three modes, evaluable):
    - `dense` — vector search on the dlt-embedded dense vectors (Qdrant);
    - `sparse` — BM25 over the in-memory FAQ corpus;
@@ -69,10 +69,8 @@ flowchart TB
 4. **Generation** — tool results are returned to the LLM to compose a natural-language answer.
 
 ### 2.3 Tool path (real-time, no station DB)
-1. The LLM calls the station tools (`stations_by_name`, `stations_nearby`, or the
-   `get_station_availability` facade); **the LLM
-   never produces raw coordinates**.
-2. Tools geocode the place with the **Grand Lyon Photon-based** geocoder
+1. The LLM calls the single `get_velov_info` facade; **the LLM never produces raw coordinates**.
+2. The facade first checks station names, then geocodes a place with the **Grand Lyon Photon-based** geocoder
    (`download.data.grandlyon.com/geocoding/photon-bal/api`) and fetch the real-time
    `jcd_jcdecaux.jcdvelov` snapshot (name, `lat`/`lng`, `available_bikes`,
    `available_bike_stands`, `status`, `last_update`) — no stations stored locally.
@@ -142,11 +140,9 @@ flowchart TB
   - **Go (subscription)** — `https://opencode.ai/zen/go/v1/` with a Go model (e.g. `kimi-k3`).
 
 ### 4.4 `app/tools/stations.py`
-- Composable tool functions, all real-time and cached (TTL 30s on the station snapshot):
-  - `geocode_place(place)` — Photon geocode → `{place, lat, lng}`.
-  - `stations_by_name(name, limit)` — substring match on name/address/commune/pole.
-  - `stations_nearby(lat, lng, n)` — nearest stations with `distance_m`.
-  - `get_station_availability(name_or_location)` — facade: by name, else geocode + nearby.
+- One `get_velov_info(location, radius_m, limit, need_bikes, need_free_stands, sort_by)` tool.
+- It performs station matching or Photon geocoding, radius/filter/sort rules, and returns real-time availability.
+- Station snapshots remain cached for 30 seconds.
 - `grandlyon.py` fetches `jcd_jcdecaux.jcdvelov/all.json?maxfeatures=-1` (cached) and
   geocodes via `download.data.grandlyon.com/geocoding/photon-bal/api`.
 

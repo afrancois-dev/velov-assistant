@@ -19,18 +19,13 @@ from starlette.responses import Response
 from app.config import settings
 from app.rag import retriever
 from app.rag.llm import get_model, rewrite_query
-from app.tools.stations import (
-    geocode_place,
-    get_station_availability,
-    stations_by_name,
-    stations_nearby,
-)
+from app.tools.stations import get_velov_info
 
 _SYSTEM = (
     "You are a helpful assistant for Velo'v, Lyon's bike-sharing service. "
     "Answer policy/pricing/rules questions using the search_faq tool. "
-    "For real-time station availability (bikes/free stands, nearest station), use the station tools. "
-    "If neither the FAQ nor the station tools can answer, say you don't know."
+    "For real-time station availability (bikes/free stands, nearest station), use get_velov_info. "
+    "If neither the FAQ nor get_velov_info can answer, say you don't know."
 )
 
 
@@ -68,7 +63,7 @@ def search_faq(
 agent = Agent(  # type: ignore
     get_model(),
     instructions=_SYSTEM,
-    tools=[search_faq, geocode_place, stations_by_name, stations_nearby, get_station_availability],
+    tools=[search_faq, get_velov_info],
 )
 
 logfire.configure(token=settings.logfire_token, service_name="velov-assistant")
