@@ -25,7 +25,8 @@ from app.rag.llm import get_model
 
 faq_file = json.loads(Path("data/faq/faq.json").read_text())
 ground_truth_file = json.loads(Path("data/faq/ground_truth.json").read_text())
-answers_file = Path("data/eval/generated_answers.json")
+answers_path = Path("data/eval/generated_answers.json")
+answers_file = json.loads(answers_path.read_text()) if answers_path.exists() else []
 
 JUDGE_INSTRUCTIONS = """
 You are an expert evaluator. You will be given:
@@ -64,63 +65,46 @@ class AnswerEvaluation(BaseModel):
     score: Literal["good", "bad"] = Field(description="'good' if the answer is correct and complete, 'bad' otherwise.")
 
 
-_judge_agent = Agent(get_model(), instructions=JUDGE_INSTRUCTIONS, output_type=AnswerEvaluation)
-
-
 def judge(question: str, answer_orig: str, answer_llm: str) -> AnswerEvaluation:
     return cast(
         AnswerEvaluation,
-        _judge_agent.run_sync(JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm)).output,
+        Agent(get_model(), instructions=JUDGE_INSTRUCTIONS, output_type=AnswerEvaluation)
+        .run_sync(JUDGE_PROMPT.format(question=question, answer_orig=answer_orig, answer_llm=answer_llm))
+        .output,
     )
-
-
-def _load_records() -> list[dict]:
-    if not answers_file.exists():
-        return []
-    return json.loads(answers_file.read_text())
-
-
-def _load_cache() -> dict[str, str]:
-    return {rec["question"]: rec["answer_llm"] for rec in _load_records()}
-
-
-def _save_cache(records: list[dict]) -> None:
-    answers_file.parent.mkdir(parents=True, exist_ok=True)
-    answers_file.write_text(json.dumps(records, ensure_ascii=False, indent=2))
-
-
-def _generate_answer(question: str) -> str:
-    return _run_chat(question)
 
 
 def _records(regenerate: bool = False, limit: int | None = None) -> list[dict]:
     faq = {d["id"]: d["answer"] for d in faq_file}
-    cached_records = [] if regenerate else _load_records()
-    cache = {rec["question"]: rec["answer_llm"] for rec in cached_records}
+    answers = {} if regenerate else {rec["question"]: rec for rec in answers_file}
     items = ground_truth_file if limit is None else ground_truth_file[:limit]
     records: list[dict] = []
     for item in tqdm(items, desc="Generating answers"):
         question = item["question"]
-        answer_llm = cache.get(question)
-        if answer_llm is None:
-            answer_llm = _generate_answer(question)
-            cached_records.append(
-                {"question": question, "document": item["document"], "answer_llm": answer_llm, "model": settings.llm_model}
-            )
-            cache[question] = answer_llm
-            _save_cache(cached_records)
+        answer = answers.get(question)
+        if answer is None:
+            answer_llm = _run_chat(question)
+            answers[question] = {
+                "question": question,
+                "document": item["document"],
+                "answer_llm": answer_llm,
+                "model": settings.llm_model,
+            }
+            answers_path.write_text(json.dumps(list(answers.values()), ensure_ascii=False, indent=2))
+        else:
+            answer_llm = answer["answer_llm"]
         records.append({"question": question, "answer_orig": faq[item["document"]], "answer_llm": answer_llm})
     return records
 
 
 def _judge_only_records(limit: int | None = None) -> list[dict]:
     faq = {d["id"]: d["answer"] for d in faq_file}
-    cache = _load_cache()
+    answers = {rec["question"]: rec["answer_llm"] for rec in answers_file}
     items = ground_truth_file if limit is None else ground_truth_file[:limit]
     records: list[dict] = []
     missing = 0
     for item in items:
-        answer_llm = cache.get(item["question"])
+        answer_llm = answers.get(item["question"])
         if answer_llm is None:
             missing += 1
             continue

@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     # Runtime environment: "local" (web chat + local Qdrant) | "dev" (FastAPI streaming + remote Qdrant).
     app_env: str = _APP_ENV
 
-    # LLM (OpenCode Zen — OpenAI-compatible)
+    # LLM (OpenCode Zen — openAI-compatible)
     openai_api_key: str = ""
     openai_base_url: str = "https://opencode.ai/zen/v1/"
     llm_model: str = "deepseek-v4-flash-free"

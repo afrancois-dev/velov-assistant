@@ -21,7 +21,7 @@ repos:
 
       - id: type-check
         name: "Type Checking (ty)"
-        entry: uv --directory app run ty
+        entry: uv --directory app run ty check
         language: system
         types: [python]
         files: ^(app|evaluation|ingestion)/.*\.py$
