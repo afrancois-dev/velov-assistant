@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import re
+import unicodedata
 from typing import Annotated, Any, Literal
 
 from pydantic import Field
 
+from app.rag.llm import reformulate_station_query
 from app.tools import grandlyon
 
 _STATION_FIELDS = (
@@ -38,6 +41,22 @@ def _matches_filters(station: dict[str, Any], need_bikes: bool, need_free_stands
     )
 
 
+def _normalize_location(value: str) -> str:
+    value = unicodedata.normalize("NFKD", value).encode("ascii", "ignore").decode().upper()
+    return re.sub(r"[^A-Z0-9]+", " ", value).strip()
+
+
+def _station_matches(query: str, station: dict[str, Any]) -> bool:
+    normalized_query = _normalize_location(query)
+    return bool(normalized_query) and any(
+        normalized_query in _normalize_location(station.get(field) or "") for field in ("name", "address", "commune", "pole")
+    )
+
+
+def _find_station_matches(query: str, stations: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [station for station in stations if _station_matches(query, station)]
+
+
 def _sort_key(station: dict[str, Any], sort_by: Literal["distance", "bikes", "free_stands"]) -> float:
     values = {
         "distance": station.get("distance_m"),
@@ -68,12 +87,15 @@ def get_velov_info(
     if not query:
         return {"query": location, "error": "A location is required", "stations": []}
     stations = grandlyon.get_stations()
-    query_lower = query.lower()
-    matches = [
-        station
-        for station in stations
-        if any(query_lower in (station.get(field) or "").lower() for field in ("name", "address", "commune", "pole"))
-    ]
+    matches = _find_station_matches(query, stations)
+
+    reformulated_queries: list[str] = []
+    if not matches:
+        reformulated_queries = reformulate_station_query(query)
+        for reformulated_query in reformulated_queries:
+            matches = _find_station_matches(reformulated_query, stations)
+            if matches:
+                break
 
     response: dict[str, Any] = {
         "query": query,
@@ -81,6 +103,8 @@ def get_velov_info(
         "radius_m": radius_m,
         "stations": [],
     }
+    if reformulated_queries:
+        response["reformulated_queries"] = reformulated_queries
 
     if matches:
         candidates = matches

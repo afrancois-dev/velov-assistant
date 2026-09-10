@@ -50,10 +50,31 @@ _REWRITE_SYSTEM = (
 
 _rewrite_agent = Agent(get_model(), instructions=_REWRITE_SYSTEM, output_type=list[str])
 
+_STATION_REFORMULATE_SYSTEM = (
+    "You normalize location intents for the Lyon Velo'v station network. "
+    "Rewrite the user's location into 1 to 3 short station or landmark names. "
+    "Preserve proper names, fix obvious spelling and punctuation variations, "
+    "and do not invent addresses or coordinates. Return only the list of strings."
+)
+
+_station_reformulate_agent = Agent(get_model(), instructions=_STATION_REFORMULATE_SYSTEM, output_type=list[str])
+
 
 def rewrite_query(query: str, n_variants: int = 3) -> list[str]:
     """Expand a raw user question into retrieval variants via the LLM (rewrite sub-agent)."""
     if not settings.openai_api_key:
         return [query]
     variants = [v for v in cast(list[str], _rewrite_agent.run_sync(query).output) if v]
+    return variants[:n_variants] or [query]
+
+
+def reformulate_station_query(query: str, n_variants: int = 3) -> list[str]:
+    """Suggest corrected station/location names after deterministic matching fails."""
+    if not settings.openai_api_key:
+        return [query]
+    try:
+        output = cast(list[str], _station_reformulate_agent.run_sync(query).output)
+    except Exception:
+        return [query]
+    variants = [v.strip() for v in output if v.strip()]
     return variants[:n_variants] or [query]
