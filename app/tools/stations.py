@@ -38,13 +38,14 @@ def _matches_filters(station: dict[str, Any], need_bikes: bool, need_free_stands
     )
 
 
-def _sort_key(station: dict[str, Any], sort_by: str) -> float:
+def _sort_key(station: dict[str, Any], sort_by: Literal["distance", "bikes", "free_stands"]) -> float:
     values = {
         "distance": station.get("distance_m"),
         "bikes": station.get("available_bikes"),
         "free_stands": station.get("available_bike_stands"),
     }
-    return values[sort_by] if values[sort_by] is not None else float("inf")
+    value = values[sort_by]
+    return float(value) if isinstance(value, (int, float)) else float("inf")
 
 
 def get_velov_info(

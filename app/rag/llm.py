@@ -2,19 +2,42 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import cast
 
+import httpx
 from pydantic_ai import Agent
 from pydantic_ai.models.openai import OpenAIChatModel
 from pydantic_ai.providers.openai import OpenAIProvider
 
 from app.config import settings
 
+_IS_OPENCODE_GO = "/zen/go/" in settings.openai_base_url.lower()
+_OPENCODE_SESSION_ID = uuid.uuid4().hex
+_OPENCODE_HTTP_CLIENT = (
+    httpx.AsyncClient(
+        headers={
+            "User-Agent": "velov-assistant/1.0",
+            "x-opencode-session": _OPENCODE_SESSION_ID,
+        }
+    )
+    if _IS_OPENCODE_GO
+    else None
+)
+
 
 def get_model() -> OpenAIChatModel:
+    if _OPENCODE_HTTP_CLIENT is not None:
+        provider = OpenAIProvider(
+            base_url=settings.openai_base_url,
+            api_key=settings.openai_api_key,
+            http_client=_OPENCODE_HTTP_CLIENT,
+        )
+    else:
+        provider = OpenAIProvider(base_url=settings.openai_base_url, api_key=settings.openai_api_key)
     return OpenAIChatModel(
         settings.llm_model,
-        provider=OpenAIProvider(base_url=settings.openai_base_url, api_key=settings.openai_api_key),
+        provider=provider,
     )
 
 
