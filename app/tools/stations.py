@@ -51,7 +51,7 @@ def _sort_key(station: dict[str, Any], sort_by: Literal["distance", "bikes", "fr
 def get_velov_info(
     location: Annotated[str, Field(description="A Velo'v station name, address or landmark in Lyon (e.g. 'Part-Dieu').")],
     radius_m: Annotated[int, Field(description="Search radius in meters.", ge=100, le=5000)] = 1000,
-    limit: Annotated[int, Field(description="Maximum number of stations to return.", ge=1, le=20)] = 5,
+    limit: Annotated[int, Field(description="Maximum number of stations to return.", ge=3, le=20)] = 5,
     need_bikes: Annotated[bool, Field(description="Only return stations with available bikes.")] = False,
     need_free_stands: Annotated[bool, Field(description="Only return stations with free stands.")] = False,
     sort_by: Annotated[
