@@ -3,7 +3,9 @@
 An AI assistant for Lyon's self-service bike network (Vélo'v) with:
 
 - **RAG** — answers about policies, pricing and rules from the official FAQ.
+  - https://github.com/user-attachments/assets/32fd6466-52bf-41d3-ade5-64e538547685
 - **Function calling** — one `get_velov_info` facade for real-time station availability and nearby lookups.
+  - https://github.com/user-attachments/assets/9d50a4c8-f47d-48b8-86cb-fc16d4bf9ab1
 
 > 📋 **For reviewers** — the scoring grid is at the bottom of this file: [Evaluation grid](#evaluation-grid).
 
